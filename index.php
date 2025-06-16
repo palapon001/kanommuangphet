@@ -1,5 +1,6 @@
 <?php
 session_start();
+// กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/templates/header_footer.php';
 require_once __DIR__ . '/src/connect.php';
 require_once __DIR__ . '/src/function.php';
