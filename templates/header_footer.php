@@ -1,18 +1,18 @@
-<?php 
+<?php
 function renderHead($config, $pageType = 'main') // default เป็น main
 {
     // เซ็ตค่า class และไฟล์ CSS ตามประเภท
-      $htmlClass = '';
+    $htmlClass = '';
     $extraCss = '';
 
     switch ($pageType) {
         case 'auth':
             $htmlClass = 'light-style customizer-hide';
-            $extraCss = '<link rel="stylesheet" href="'.$config['url'].'assets/vendor/css/pages/page-auth.css" />';
+            $extraCss = '<link rel="stylesheet" href="' . $config['url'] . 'assets/vendor/css/pages/page-auth.css" />';
             break;
         default:
             $htmlClass = 'light-style layout-menu-fixed';
-            $extraCss = '<link rel="stylesheet" href="'.$config['url'].'assets/vendor/libs/apex-charts/apex-charts.css" />';
+            $extraCss = '<link rel="stylesheet" href="' . $config['url'] . 'assets/vendor/libs/apex-charts/apex-charts.css" />';
             break;
     }
     ?>
@@ -32,8 +32,10 @@ function renderHead($config, $pageType = 'main') // default เป็น main
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="<?= $config['url'] ?>assets/vendor/fonts/boxicons.css" />
-        <link rel="stylesheet" href="<?= $config['url'] ?>assets/vendor/css/core.css" class="template-customizer-core-css" />
-        <link rel="stylesheet" href="<?= $config['url'] ?>assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+        <link rel="stylesheet" href="<?= $config['url'] ?>assets/vendor/css/core.css"
+            class="template-customizer-core-css" />
+        <link rel="stylesheet" href="<?= $config['url'] ?>assets/vendor/css/theme-default.css"
+            class="template-customizer-theme-css" />
         <link rel="stylesheet" href="<?= $config['url'] ?>assets/css/demo.css" />
         <link rel="stylesheet" href="<?= $config['url'] ?>assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
         <?= $extraCss ?>
@@ -42,8 +44,36 @@ function renderHead($config, $pageType = 'main') // default เป็น main
     </head>
 
     <body>
-    <?php
-} 
+
+
+        <!-- sweetalert2 -->
+        <?php if (!empty($_GET['alert'])): ?>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                Swal.fire({
+                    icon: <?= json_encode($_GET['alert']) ?>,
+                    title: <?= json_encode($_GET['text'] ?? '') ?>,
+                    confirmButtonText: 'ตกลง',
+                    customClass: {
+                        container: 'my-swal-container'
+                    }
+                }).then(() => {
+                    // ลบ query string ของ alert/text ออก
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('alert');
+                    url.searchParams.delete('text');
+                    window.history.replaceState(null, '', url);
+                });
+            </script>
+            <style>
+                .my-swal-container {
+                    z-index: 1100 !important;
+                }
+            </style>
+        <?php endif; ?>
+        <!-- / sweetalert2 -->
+        <?php
+}
 
 function renderFooter($config)
 {

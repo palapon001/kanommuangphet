@@ -1,14 +1,13 @@
 <?php
 session_start();
 
-if($_SESSION['user_id'] == 'admin') {
-  header("Location: .php");
-  exit;
-}
+$baseDir = '../../';
+$parentDir = '../';
+
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
-require_once __DIR__ . '/templates/header_footer.php';
-require_once __DIR__ . '/src/connect.php';
-require_once __DIR__ . '/src/function.php';
+require_once __DIR__ . $baseDir . 'templates/header_footer.php';
+require_once __DIR__ . $baseDir . 'src/connect.php';
+require_once __DIR__ . $baseDir . 'src/function.php';
 
 // กรองค่า page เพื่อความปลอดภัย
 $search = isset($_GET['q']) ? trim($_GET['q']) : '';
@@ -17,7 +16,9 @@ if (!empty($page)) {
   $_SESSION['page'] = $page;
 }
 $currentPage = $page ?: ($_SESSION['page'] ?? '');
-$pageFile = "content/{$page}.php";
+$pageFile = $parentDir . "content/{$page}.php";
+$config['title'] = 'Kanom Muang Phet (Backend)';
+$config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
 renderHead($config);
 ?>
 
@@ -25,20 +26,20 @@ renderHead($config);
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
   <div class="layout-container">
-    <?php include 'templates/aside.php'; ?>
+    <?php include $parentDir . 'templates/aside.php'; ?>
     <!-- Layout container -->
     <div class="layout-page">
       <!-- Navbar -->
-      <?php include 'templates/navbar.php'; ?>
+      <?php include $parentDir . 'templates/navbar.php'; ?>
       <!-- / Navbar -->
       <!-- Content wrapper -->
       <div class="content-wrapper">
         <!-- Content -->
         <?php
         if (!empty($search)) {
-          include 'content/search.php';
+          include $parentDir . 'content/search.php';
         } else {
-          ($page && file_exists($pageFile)) ? include $pageFile : include 'content/dashboard.php';
+          ($page && file_exists($pageFile)) ? include $pageFile : include $parentDir . 'content/dashboard.php';
         }
         ?>
         <!-- / Content -->
