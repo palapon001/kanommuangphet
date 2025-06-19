@@ -12,10 +12,11 @@ if ($_POST['debug'] == 'dev') {
 
 $act = $_GET['act'] ?? '';
 if (!in_array($act, ['insert', 'update', 'delete'])) {
-    redirectWithAlert('error', 'การกระทำไม่ถูกต้อง');
+    redirectWithAlert('error', 'การกระทำไม่ถูกต้อง', 'users');
 }
 
 $data = [
+    'id' => $_POST['id'] ?? '',
     'name' => trim($_POST['name'] ?? ''),
     'email' => trim($_POST['email'] ?? ''),
     'phone' => trim($_POST['phone'] ?? ''),
@@ -35,39 +36,40 @@ switch ($act) {
         ];
 
         if ($data['name'] === '') {
-            redirectWithAlert('warning', 'กรุณากรอกชื่อ');
+             redirectWithAlert('warning', 'กรุณากรอกชื่อ', 'users');
         }
 
         if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง');
+            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', 'users');
         }
 
         if ($data['password'] === '') {
-            redirectWithAlert('warning', 'กรุณากรอกรหัสผ่าน');
+            redirectWithAlert('warning', 'กรุณากรอกรหัสผ่าน', 'users');
         }
 
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         $data['created_at'] = date('Y-m-d H:i:s');
 
         if (dbInsert('users', $data)) {
-            redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ');
+            redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', 'users');
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล', 'users');
         }
         break;
 
     case 'update':
         $id = (int) ($_POST['id'] ?? 0);
+        
         if ($id <= 0) {
-            redirectWithAlert('error', 'ID ไม่ถูกต้อง');
+            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'users');
         }
 
         if ($data['name'] === '') {
-            redirectWithAlert('warning', 'กรุณากรอกชื่อ');
+            redirectWithAlert('warning', 'กรุณากรอกชื่อ', 'users');
         }
 
         if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง');
+            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', 'users');
         }
 
         if ($data['password'] !== '') {
@@ -77,21 +79,22 @@ switch ($act) {
         }
 
         if (dbUpdate('users', $data, 'id = :id', ['id' => $id])) {
-            redirectWithAlert('success', 'แก้ไขข้อมูลสำเร็จ');
+            echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true);
+            redirectWithAlert('success', 'แก้ไขข้อมูลสำเร็จ', 'users');
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', 'users');
         }
         break;
 
     case 'delete':
         $id = (int) ($_GET['id'] ?? 0);
         if ($id <= 0) {
-            redirectWithAlert('error', 'ID ไม่ถูกต้อง');
+            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'users');
         }
         if (dbDelete('users', 'id = :id', ['id' => $id])) {
-            redirectWithAlert('success', 'ลบข้อมูลสำเร็จ');
+            redirectWithAlert('success', 'ลบข้อมูลสำเร็จ', 'users');
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบข้อมูล');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบข้อมูล', 'users');
         }
         break;
 }

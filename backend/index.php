@@ -5,7 +5,7 @@ $baseDir = '../../';
 $parentDir = '../';
 
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
-require_once __DIR__ . $baseDir . 'templates/header_footer.php';
+require_once __DIR__ . $baseDir . 'src/header_footer.php';
 require_once __DIR__ . $baseDir . 'src/connect.php';
 require_once __DIR__ . $baseDir . 'src/function.php';
 
@@ -16,30 +16,38 @@ if (!empty($page)) {
   $_SESSION['page'] = $page;
 }
 $currentPage = $page ?: ($_SESSION['page'] ?? '');
-$pageFile = $parentDir . "content/{$page}.php";
+$pageFile = "content/{$page}.php";
 $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
+$config['role'] = 'backend';
 renderHead($config);
 ?>
-
 
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
   <div class="layout-container">
-    <?php include $parentDir . 'templates/aside.php'; ?>
+    <?php include 'templates/aside.php'; ?>
     <!-- Layout container -->
     <div class="layout-page">
       <!-- Navbar -->
-      <?php include $parentDir . 'templates/navbar.php'; ?>
+      <?php include 'templates/navbar.php'; ?>
       <!-- / Navbar -->
       <!-- Content wrapper -->
       <div class="content-wrapper">
         <!-- Content -->
         <?php
         if (!empty($search)) {
-          include $parentDir . 'content/search.php';
+          include 'content/search.php'; // ถ้ามีคำค้นหา ให้แสดงหน้า search
         } else {
-          ($page && file_exists($pageFile)) ? include $pageFile : include $parentDir . 'content/dashboard.php';
+          if ($page == 'logout') {
+            
+            session_destroy();
+            header("Location: ../login.php"); // ออกจากระบบ
+            exit;
+          }
+          ($page && file_exists($pageFile))
+            ? include $pageFile               // ถ้ามีหน้าและไฟล์มีจริง ให้ include
+            : include 'content/dashboard.php'; // ไม่เช่นนั้นให้กลับไปหน้า dashboard
         }
         ?>
         <!-- / Content -->

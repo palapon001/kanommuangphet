@@ -1,6 +1,6 @@
 <?php
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
-require_once __DIR__ . '/templates/header_footer.php';
+require_once __DIR__ . '/src/header_footer.php';
 $host = $_SERVER['HTTP_HOST'];
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $config = [

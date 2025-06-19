@@ -1,6 +1,10 @@
 <?php
-$profile = ['name' => 'admin', 'role' => 'admin', 'imagePath' => 'uploads/profile/default.png']
-    ?>
+$profile = [
+    'name' => 'admin',
+    'role' => 'admin',
+    'imagePath' => 'uploads/profile/default.png'
+];
+?>
 
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar">
@@ -64,10 +68,10 @@ $profile = ['name' => 'admin', 'role' => 'admin', 'imagePath' => 'uploads/profil
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="logout.php">
+                        <button class="dropdown-item" href="#" onclick="alertConfirm('คุณต้องการออกจากระบบหรือไม่?', '?page=logout')">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">ออกจากระบบ</span>
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </li>
@@ -75,3 +79,4 @@ $profile = ['name' => 'admin', 'role' => 'admin', 'imagePath' => 'uploads/profil
         </ul>
     </div>
 </nav>
+

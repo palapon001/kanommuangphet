@@ -1,7 +1,7 @@
 <!-- Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="<?= $config['url'] ?>" class="app-brand-link">
+        <a href="<?= $config['url'] . $config['role'] ?>" class="app-brand-link">
             <img src="https://placehold.co/100x37?text=Logo" alt="">
         </a>
 
@@ -15,7 +15,7 @@
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
         <li class="menu-item <?= ($page == '' || $page == 'dashboard') ? 'active' : '' ?>">
-            <a href="<?= $config['url'] ?>"
+            <a href="<?= $config['url'] . $config['role'] ?>"
                 class="menu-link <?= ($page == '' || $page == 'dashboard') ? 'active' : '' ?>">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Dashboard">แดชบอร์ด</div>

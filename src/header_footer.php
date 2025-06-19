@@ -41,14 +41,37 @@ function renderHead($config, $pageType = 'main') // default เป็น main
         <?= $extraCss ?>
         <script src="<?= $config['url'] ?>assets/vendor/js/helpers.js"></script>
         <script src="<?= $config['url'] ?>assets/js/config.js"></script>
+
     </head>
 
-    <body>
-
+    <body> 
 
         <!-- sweetalert2 -->
-        <?php if (!empty($_GET['alert'])): ?>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            .my-swal-container {
+                z-index: 1100 !important;
+            }
+        </style>
+        <script>
+            function alertConfirm(message, path) {
+                Swal.fire({
+                    title: 'ยืนยัน',
+                    text: message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'ตกลง',
+                    cancelButtonText: 'ยกเลิก', customClass: {
+                        container: 'my-swal-container'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = path;
+                    }
+                });
+            }
+        </script>
+        <?php if (!empty($_GET['alert']) && !empty($_GET['text'])): ?>
             <script>
                 Swal.fire({
                     icon: <?= json_encode($_GET['alert']) ?>,
@@ -65,11 +88,6 @@ function renderHead($config, $pageType = 'main') // default เป็น main
                     window.history.replaceState(null, '', url);
                 });
             </script>
-            <style>
-                .my-swal-container {
-                    z-index: 1100 !important;
-                }
-            </style>
         <?php endif; ?>
         <!-- / sweetalert2 -->
         <?php
