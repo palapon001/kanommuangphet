@@ -69,12 +69,10 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
 }
 
 
+
 function renderTable($cols, $data, $url)
 {
     ?>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
 
     <table id="dynamicTable" class="display table table-bordered" style="width:100%">
         <thead>
@@ -117,10 +115,11 @@ function renderTable($cols, $data, $url)
         $(document).ready(function () {
             var table = new DataTable('#dynamicTable', {
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
+                    url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
                 },
             });
         });
     </script>
     <?php
 }
+

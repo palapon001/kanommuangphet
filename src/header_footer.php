@@ -41,10 +41,13 @@ function renderHead($config, $pageType = 'main') // default เป็น main
         <?= $extraCss ?>
         <script src="<?= $config['url'] ?>assets/vendor/js/helpers.js"></script>
         <script src="<?= $config['url'] ?>assets/js/config.js"></script>
-
+        <!-- CSS/JS สำหรับ DataTables + Bootstrap -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
     </head>
 
-    <body> 
+    <body>
 
         <!-- sweetalert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
