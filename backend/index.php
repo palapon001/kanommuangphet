@@ -15,11 +15,13 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['page'
 if (!empty($page)) {
   $_SESSION['page'] = $page;
 }
-$currentPage = $page ?: ($_SESSION['page'] ?? '');
+$currentPage = $page ?: ($_SESSION['page'] ?? 'users');
 $pageFile = "content/{$page}.php";
 $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
 $config['role'] = 'backend';
+
+
 renderHead($config);
 ?>
 
@@ -36,11 +38,11 @@ renderHead($config);
       <div class="content-wrapper">
         <!-- Content -->
         <?php
+        echo $currentPage;
         if (!empty($search)) {
           include 'content/search.php'; // ถ้ามีคำค้นหา ให้แสดงหน้า search
         } else {
           if ($page == 'logout') {
-            
             session_destroy();
             header("Location: ../login.php"); // ออกจากระบบ
             exit;

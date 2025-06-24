@@ -3,53 +3,36 @@ require_once __DIR__ . '/../src/connect.php';
 require_once __DIR__ . '/../src/function.php';
 
 if ($_POST['debug'] == 'dev') {
-    $act = $_GET['act'] ?? '';
+    $act = $_POST['act'] ?? '';
     echo '<pre>';
-    echo 'act = ' . $act;
+    echo 'act = ' . $act . '<br>';
     print_r($_POST);
     echo '</pre>';
 }
 
-$act = $_GET['act'] ?? '';
+$act = $_POST['act'] ?? $_GET['act'] ?? '';
 if (!in_array($act, ['insert', 'update', 'delete'])) {
     redirectWithAlert('error', 'การกระทำไม่ถูกต้อง', 'users');
 }
 
 $data = [
-    'id' => $_POST['id'] ?? '',
     'name' => trim($_POST['name'] ?? ''),
     'email' => trim($_POST['email'] ?? ''),
     'phone' => trim($_POST['phone'] ?? ''),
     'password' => trim($_POST['password'] ?? ''),
-    'login_type' => trim($_POST['login_type'] ?? ''),
+    'login_type' => trim($_POST['login_type'] ?? 'normal'), // ถ้าไม่มีส่งมา ให้ default เป็น 'normal'
     'line_user_id' => trim($_POST['line_user_id'] ?? ''),
     'avatar_url' => trim($_POST['avatar_url'] ?? ''),
-    'role' => trim($_POST['role'] ?? ''),
+    'role' => trim($_POST['role'] ?? 'user'),         // ค่า default ปลอดภัย
+    'created_at' => date('Y-m-d H:i:s'),
 ];
 
 switch ($act) {
     case 'insert':
-        $data = [
-            'name' => trim($_POST['name'] ?? ''),
-            'email' => trim($_POST['email'] ?? ''),
-            'password' => trim($_POST['password'] ?? ''),
-        ];
-
-        if ($data['name'] === '') {
-             redirectWithAlert('warning', 'กรุณากรอกชื่อ', 'users');
-        }
-
-        if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', 'users');
-        }
-
-        if ($data['password'] === '') {
-            redirectWithAlert('warning', 'กรุณากรอกรหัสผ่าน', 'users');
-        }
-
-        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        $data['created_at'] = date('Y-m-d H:i:s');
-
+        echo 'insert working';
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
         if (dbInsert('users', $data)) {
             redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', 'users');
         } else {
@@ -59,7 +42,7 @@ switch ($act) {
 
     case 'update':
         $id = (int) ($_POST['id'] ?? 0);
-        
+
         if ($id <= 0) {
             redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'users');
         }

@@ -11,6 +11,7 @@ function dbSelectSQL($sql, $params = [], $limit = null)
 }
 
 
+
 // Create
 function dbInsert($table, $data)
 {
@@ -70,8 +71,14 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
 
 
 
-function renderTable($cols, $data, $url)
+function renderTable($data, $cols = null, $url = '')
 {
+
+    $path = '../process/' . $url;
+
+    if (empty($cols) && !empty($data)) {
+        $cols = array_combine(array_keys($data[0]), array_keys($data[0]));
+    }
     ?>
     <!-- ปุ่มเพิ่มข้อมูล -->
     <div class="mb-3">
@@ -91,13 +98,15 @@ function renderTable($cols, $data, $url)
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($data as $row): ?>
-                <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label) echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+            <?php foreach ($data as $dataKey => $row): ?>
+                <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
+                      echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
                             <?php if ($key === 'avatar_url'): ?>
                                 <?php if (!empty($row[$key])): ?>
-                                    <img src="<?= htmlspecialchars($row[$key]) ?>" width="40" height="40" class="rounded-circle" alt="avatar">
+                                    <img src="<?= htmlspecialchars($row[$key]) ?>" width="40" height="40" class="rounded-circle"
+                                        alt="avatar">
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
@@ -108,41 +117,87 @@ function renderTable($cols, $data, $url)
                     <?php endforeach; ?>
                     <td>
                         <div class="btn-group" style="display:flex;gap:5px;">
-                            <button class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal" data-bs-target="#dataModal">แก้ไข</button>
-                            <a href="<?= $url ?>?delete=<?= $row['id'] ?>" class="btn btn-sm btn-danger">ลบ</a>
+                            <button type="button" class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal"
+                                data-bs-target="#modal-<?= $row['id'] ?>">
+                                แก้ไข
+                            </button>
+                            <a href="<?= $path ?>?act=delete&id=<?= $row['id'] ?>" class="btn btn-sm btn-danger">ลบ</a>
                         </div>
                     </td>
                 </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modal-<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">แก้ไขข้อมูล <?= $row['name'] ?? $row['id'] ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="<?= $path ?>?act=update">
+                                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+
+                                    <?php foreach (array_keys($row) as $key): ?>
+                                        <div class="mb-3">
+                                            <label class="form-label"><?= htmlspecialchars($key) ?></label>
+                                            <input type="text" name="<?= $key ?>" value="<?= htmlspecialchars($row[$key]) ?>"
+                                                class="form-control" <?= $key === 'id' ? 'readonly' : '' ?>>
+                                        </div>
+                                    <?php endforeach; ?>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                                        <button type="submit" class="btn btn-primary">บันทึก</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             <?php endforeach; ?>
         </tbody>
     </table>
 
-    <!-- Modal Form สำหรับ Insert / Edit -->
+    <!-- Modal เพิ่มข้อมูล -->
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form class="modal-content" method="post" action="<?= $url ?>">
-                <input type="hidden" name="id" id="form-id">
-                <input type="hidden" name="act" id="form-act" value="insert">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="dataModalLabel">เพิ่ม / แก้ไขข้อมูล</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <?php foreach ($cols as $key => $label): ?>
-                        <?php if ($key === 'id') continue; ?>
-                        <div class="mb-3">
-                            <label class="form-label"><?= htmlspecialchars($label) ?></label>
-                            <input type="text" name="<?= $key ?>" id="form-<?= $key ?>" class="form-control">
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">บันทึก</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
-                </div>
-            </form>
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <form method="post" action="<?= $path ?>?act=insert">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dataModalLabel">เพิ่มข้อมูลใหม่</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <?php foreach ($cols as $key => $label): ?>
+                            <?php if ($key === 'id' || $key === 'avatar_url')
+                                continue; ?>
+                            <div class="mb-3">
+                                <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                <?php if ($key === 'role'): ?>
+                                    <select name="<?= $key ?>" class="form-select">
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                        <option value="vendor">Vendor</option>
+                                    </select>
+                                <?php else: ?>
+                                    <input type="text" name="<?= $key ?>" class="form-control">
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">บันทึก</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+
+
+
 
     <!-- Script DataTable + Modal -->
     <script>
@@ -152,28 +207,8 @@ function renderTable($cols, $data, $url)
                     url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
                 }
             });
-
-            $('.btn-edit').on('click', function () {
-                const row = $(this).closest('tr');
-                const id = row.data('id');
-                $('#form-id').val(id);
-                $('#form-act').val('update');
-                <?php foreach ($cols as $key => $label): ?>
-                    <?php if ($key === 'id') continue; ?>
-                    $('#form-<?= $key ?>').val(row.data('<?= $key ?>'));
-                <?php endforeach; ?>
-            });
         });
-
-        function openForm(act) {
-            $('#form-id').val('');
-            $('#form-act').val(act);
-            <?php foreach ($cols as $key => $label): ?>
-                <?php if ($key === 'id') continue; ?>
-                $('#form-<?= $key ?>').val('');
-            <?php endforeach; ?>
-        }
     </script>
- 
+
     <?php
 }
