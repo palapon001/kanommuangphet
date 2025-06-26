@@ -115,7 +115,7 @@ function renderTable($data, $cols = null, $url = '')
                             <?php endif; ?>
                         </td>
                     <?php endforeach; ?>
-                    <td>
+                    <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
                             <button type="button" class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal"
                                 data-bs-target="#modal-<?= $row['id'] ?>">
@@ -199,13 +199,50 @@ function renderTable($data, $cols = null, $url = '')
 
 
 
+
     <!-- Script DataTable + Modal -->
     <script>
         $(document).ready(function () {
             new DataTable('#dynamicTable', {
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
-                }
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':not(:last-child)'  // ไม่เอาคอลัมน์สุดท้าย
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }, 
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                ],
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                order: [[0, 'asc']]
             });
         });
     </script>

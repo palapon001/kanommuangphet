@@ -1,5 +1,5 @@
 <?php
-$shops = dbSelect('shops');
+$shops = $model['shops'];
 if ($_GET['debug'] == 'dev') {
     echo '<pre> Table shops';
     print_r($shops);

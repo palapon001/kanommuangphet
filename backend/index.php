@@ -21,9 +21,9 @@ $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
 $config['role'] = 'backend';
 
-
 renderHead($config);
 ?>
+
 
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
@@ -38,6 +38,14 @@ renderHead($config);
       <div class="content-wrapper">
         <!-- Content -->
         <?php
+
+        $model = [
+          'users' => dbSelect('users'),
+          'shops' => dbSelect('shops'),
+          'products' => dbSelect('products'),
+          'ingredients' => dbSelect('ingredients'),
+        ];
+
         if (!empty($search)) {
           include 'content/search.php'; // ถ้ามีคำค้นหา ให้แสดงหน้า search
         } else {

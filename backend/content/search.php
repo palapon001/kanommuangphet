@@ -2,28 +2,20 @@
 $search = $_GET['q'] ?? '';
 $params = [':q1' => "%$search%"];
 
-// mapping ตาราง → ชื่อคอลัมน์ที่ต้องค้นหา
-$searchMap = [
-    'users'     => 'name',
-    'products'   => 'name', 
-    'shops'      => 'name',
-    'ingredients' => 'name',
-    // เพิ่มตามต้องการ
-];
-
 $resultSearch = [];
 
-foreach ($searchMap as $table => $column) {
-    $where = "($column LIKE :q1)";
+foreach (array_keys($model) as $table) {
+    $where = "(name LIKE :q1)";
     $resultDB = dbSelect($table, $where, $params, 20); // ปรับ limit ตามต้องการ
+
     if (!empty($resultDB)) {
-        // แนบชื่อตารางเป็น source ด้วย
         foreach ($resultDB as &$row) {
             $row['_source'] = $table;
         }
         $resultSearch = array_merge($resultSearch, $resultDB);
     }
 }
+
 
 // Debug
 if ($_GET['debug'] == 'dev') {

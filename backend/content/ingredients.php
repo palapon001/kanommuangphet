@@ -1,5 +1,5 @@
 <?php
-$ingredients = dbSelect('ingredients');
+$ingredients = $model['ingredients'];
 if ($_GET['debug'] == 'dev') {
     echo '<pre> Table ingredients';
     print_r($ingredients);

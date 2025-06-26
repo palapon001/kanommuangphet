@@ -1,5 +1,5 @@
 <?php
-$users = dbSelect('users');
+$users = $model['users'];
 
 $cols = [
     'id' => 'ลำดับ',
