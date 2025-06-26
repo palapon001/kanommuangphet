@@ -38,7 +38,6 @@ renderHead($config);
       <div class="content-wrapper">
         <!-- Content -->
         <?php
-        echo $currentPage;
         if (!empty($search)) {
           include 'content/search.php'; // ถ้ามีคำค้นหา ให้แสดงหน้า search
         } else {
