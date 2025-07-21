@@ -9,6 +9,7 @@ $config = [
     'url' => "{$protocol}://{$host}/kanommuangphet/"
 ];
 renderHead($config, 'auth');
+$lang = $_GET['lang'] ?? 'th';
 ?>
 
 <!-- Layout wrapper -->
@@ -20,12 +21,6 @@ renderHead($config, 'auth');
             <!-- Navbar -->
             <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom py-2">
                 <div class="container-xxl">
-
-                    <!-- Logo -->
-                    <a class="navbar-brand fw-bold  " href="/">
-                        <i class="fa-solid fa-store me-2"></i>ร้านค้า
-                    </a>
-
                     <!-- Toggle for mobile -->
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                         <span class="navbar-toggler-icon"></span>
@@ -33,16 +28,6 @@ renderHead($config, 'auth');
 
                     <!-- Navbar content -->
                     <div class="collapse navbar-collapse" id="mainNavbar">
-
-                        <!-- Search Box -->
-                        <form class="d-flex mx-auto my-2 my-xl-0" role="search" style="max-width: 500px; width: 100%;">
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0"><i
-                                        class="fa-solid fa-magnifying-glass"></i></span>
-                                <input type="text" class="form-control border-start-0"
-                                    placeholder="พิมพ์ชื่อสินค้าเพื่อค้นหาราคากลาง..." aria-label="Search">
-                            </div>
-                        </form>
 
                         <!-- Right Items -->
                         <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
@@ -78,38 +63,83 @@ renderHead($config, 'auth');
                             </li>
 
                             <!-- Language -->
-                            <!-- Optional: add if needed -->
-                            <!-- <li class="nav-item d-flex gap-1 align-items-center">
-                                <a href="/en" class="nav-link px-1">EN</a>
-                                <span class="text-muted">|</span>
-                                <a href="/" class="nav-link px-1 fw-bold text-success">TH</a>
-                            </li>  -->
+                            <li class="nav-item d-flex gap-1 align-items-center">
+                                <a href="?lang=en"
+                                    class="nav-link px-1 <?= $lang == 'en' ? 'fw-bold text-success' : '' ?> ">EN</a>
+                                <span class="text-muted"></span>
+                                <a href="?lang=th"
+                                    class="nav-link px-1 <?= $lang == 'th' ? 'fw-bold text-success' : '' ?>  ">TH</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </nav>
             <!-- / Navbar -->
 
-            <div class="container my-4">
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <a href="/check-product" class="text-decoration-none">
-                            <div class="card border-success h-100 text-center p-4">
-                                <i class="fa-solid fa-box-open fa-2x text-success mb-3"></i>
-                                <h5 class="text-success">เช็คสินค้า</h5>
-                            </div>
-                        </a>
+            <?php
+            $centerMenus = [
+                ['label' => 'เช็คราคาสินค้า', 'url' => '/check-price', 'img' => 'https://placehold.co/100x100?text=img'],
+                ['label' => 'ข้อมูลร้านค้า', 'url' => '/stores', 'img' => 'https://placehold.co/100x100?text=img'],
+                ['label' => 'ข้อมูลองค์กร', 'url' => '/company', 'img' => 'https://placehold.co/100x100?text=img'],
+                ['label' => 'ข่าวสารและกิจกรรม', 'url' => '/news', 'img' => 'https://placehold.co/100x100?text=img'],
+                ['label' => 'ติดต่อ', 'url' => '/contact', 'img' => 'https://placehold.co/100x100?text=img'],
+            ];
+
+            $rightMenus = [
+                ['label' => 'ซื้อสินค้าออนไลน์', 'url' => '/shop', 'class' => 'btn btn-outline-success'],
+            ];
+
+            $moreMenus = [
+                ['label' => 'คำถามที่พบบ่อย', 'url' => '/faq'],
+                ['label' => 'นโยบาย', 'url' => '/policy'],
+                ['label' => 'ศูนย์ช่วยเหลือ', 'url' => '/support'],
+            ];
+            ?>
+
+            <nav class="navbar navbar-expand-lg bg-light py-4 shadow-sm">
+                <div class="container d-flex align-items-center justify-content-between flex-wrap">
+
+                    <!-- โลโก้ ซ้ายสุด -->
+                    <a class="navbar-brand me-4" href="/">
+                        <img src="https://placehold.co/150x150?text=LOGO" alt="โลโก้" height="80">
+                    </a>
+
+                    <!-- เมนูกลาง + หัวข้อ -->
+                    <div class="d-flex flex-column align-items-center mx-auto">
+                        <div class="d-flex gap-4 flex-wrap justify-content-center">
+                            <?php foreach ($centerMenus as $menu): ?>
+                                <div class="text-center">
+                                    <a href="<?= $menu['url'] ?>" class="nav-link p-0">
+                                        <img src="<?= $menu['img'] ?>" alt="<?= $menu['label'] ?>" class="mb-1 rounded"
+                                            width="80" height="80">
+                                        <div class="small"><?= $menu['label'] ?></div>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <a href="/contact" class="text-decoration-none">
-                            <div class="card border-primary h-100 text-center p-4">
-                                <i class="fa-solid fa-envelope fa-2x text-primary mb-3"></i>
-                                <h5 class="text-primary">ติดต่อ</h5>
-                            </div>
-                        </a>
+
+                    <!-- เมนูขวาสุด -->
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+                        <?php foreach ($rightMenus as $menu): ?>
+                            <a href="<?= $menu['url'] ?>" class="<?= $menu['class'] ?>"><?= $menu['label'] ?></a>
+                        <?php endforeach; ?>
+
+                        <!-- Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                เมนูเพิ่มเติม
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <?php foreach ($moreMenus as $menu): ?>
+                                    <li><a class="dropdown-item" href="<?= $menu['url'] ?>"><?= $menu['label'] ?></a></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
-            </div>
+            </nav>
 
             <hr class="my-4">
 
