@@ -1,8 +1,12 @@
 <?php
 session_start();
-
 $baseDir = '../../';
 $parentDir = '../';
+
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') { 
+  header("Location: ../login.php"); 
+  exit;
+}
 
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . $baseDir . 'src/header_footer.php';
@@ -21,7 +25,7 @@ $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
 $config['role'] = 'backend';
 
-renderHead($config);
+renderHead($config); 
 ?>
 
 

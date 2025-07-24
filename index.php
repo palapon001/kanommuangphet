@@ -10,403 +10,427 @@ $config = [
 ];
 renderHead($config, 'auth');
 $lang = $_GET['lang'] ?? 'th';
+$modelIndex = [
+    'th' => [
+        'navbar_brand_text' => 'ขนมเมืองเพชร',
+        'search_placeholder_text' => 'ค้นหาสินค้า...',
+        'search_text' => 'ค้นหา',
+        'login_button' => 'เข้าสู่ระบบ'
+    ],
+    'en' => [
+        'navbar_brand_text' => 'Kanom Muang Phet',
+        'search_placeholder_text' => 'Search products...',
+        'search_text' => 'Search',
+        'login_button' => 'Login'
+    ]
+];
 ?>
 
-<!-- Layout wrapper -->
-<div class="layout-wrapper layout-content-navbar layout-without-menu">
-    <div class="layout-container">
-        <!-- Layout container -->
-        <div class="layout-page">
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom sticky-top shadow-sm">
+    <div class="container d-flex flex-column">
 
-            <!-- Navbar -->
-            <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom py-2">
-                <div class="container-xxl">
-                    <!-- Toggle for mobile -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                        <span class="navbar-toggler-icon"></span>
+        <!-- Top Row: Logo + Search + Login + Language -->
+        <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+            <a class="navbar-brand fw-bold fs-4" href="#"><?= $modelIndex[$lang]['navbar_brand_text'] ?></a>
+
+            <form class="d-flex flex-grow-1 mx-3" role="search" style="max-width: 400px;">
+                <input class="form-control me-2" type="search" placeholder="<?= $modelIndex[$lang]['search_placeholder_text'] ?>" aria-label="Search">
+                <button class="btn btn-outline-primary" type="submit"><?= $modelIndex[$lang]['search_text'] ?></button>
+            </form>
+
+            <div class="d-flex align-items-center">
+                <a href="#" id="loginButton" class="btn btn-outline-secondary me-3"><?= $modelIndex[$lang]['login_button'] ?></a>
+
+                <div class="btn-group">
+                    <button class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <?= strtoupper($lang) ?>
                     </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="?lang=th">TH</a></li>
+                        <li><a class="dropdown-item" href="?lang=en">EN</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-                    <!-- Navbar content -->
-                    <div class="collapse navbar-collapse" id="mainNavbar">
+        <!-- Bottom Row: Menu Items -->
+        <div class="w-100">
+            <ul class="navbar-nav d-flex flex-row flex-wrap justify-content-start">
+             <?php
+$menuBottom = [
+    'th' => [
+        "ขนมไทยโบราณ" => ["ฝอยทอง", "ทองหยิบ", "ขนมชั้น", "ขนมตาล"],
+        "ขนมไทยหวาน" => ["ข้าวเหนียวมูน", "กล้วยบวชชี", "บัวลอย"],
+        "ขนมไทยทอด" => ["ทองม้วน", "ช่อม่วง", "ขนมไข่ปลา"],
+        "ขนมไทยนึ่ง" => ["ขนมถ้วย", "ขนมฟักทอง", "ขนมต้ม"],
+        "ขนมไทยอบ" => ["ขนมหม้อแกง", "ขนมเปียกปูน"],
+        "ขนมไทยแบบใหม่" => ["ขนมปังสังขยา", "ขนมเค้กไทย"],
+        "เครื่องดื่มไทย" => ["น้ำกระเจี๊ยบ", "น้ำเก๊กฮวย"],
+        "วัตถุดิบขนมไทย" => ["แป้ง", "กะทิ", "น้ำตาลปี๊บ"],
+        "โปรโมชั่น" => []
+    ],
+    'en' => [
+        "Ancient Thai Desserts" => ["Foi Thong", "Thong Yip", "Khanom Chan", "Khanom Tan"],
+        "Sweet Thai Desserts" => ["Sticky Rice with Coconut Milk", "Banana in Coconut Milk", "Bua Loi"],
+        "Fried Thai Desserts" => ["Thong Muan", "Chor Muang", "Khanom Khai Pla"],
+        "Steamed Thai Desserts" => ["Khanom Thuai", "Pumpkin Dessert", "Khanom Tom"],
+        "Baked Thai Desserts" => ["Khanom Mo Kaeng", "Piek Poon"],
+        "Modern Thai Desserts" => ["Custard Bread", "Thai Cake"],
+        "Thai Drinks" => ["Roselle Juice", "Chrysanthemum Tea"],
+        "Thai Dessert Ingredients" => ["Flour", "Coconut Milk", "Palm Sugar"],
+        "Promotions" => []
+    ]
+];
+?>
 
-                        <!-- Right Items -->
-                        <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
 
-                            <!-- Social Icons -->
-                            <li class="nav-item d-flex gap-2">
-                                <a href="https://www.youtube.com/channel/UCVk1W9MgEPe0x0Ckvs6R3vw" target="_blank"
-                                    class="text-danger fs-5">
-                                    <i class="fab fa-youtube"></i>
-                                </a>
-                                <a href="https://www.facebook.com/taladsimummuang/" target="_blank"
-                                    class="text-primary fs-5">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="http://line.me/ti/p/~@smm_market" target="_blank" class="text-success fs-5">
-                                    <i class="fab fa-line"></i>
-                                </a>
-                            </li>
+                <div class="w-100">
+                    <ul class="navbar-nav d-flex flex-row flex-wrap justify-content-start">
+                        <?php foreach ($menuBottom[$lang] as $item => $submenus): ?>
+                            <?php if (!empty($submenus)): ?>
+                                <li class="nav-item dropdown mx-2">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown<?= md5($item) ?>" role="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <?= $item ?>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdown<?= md5($item) ?>">
+                                        <?php foreach ($submenus as $submenu): ?>
+                                            <li><a class="dropdown-item" href="#"><?= $submenu ?></a></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </li>
+                            <?php else: ?>
+                                <li class="nav-item mx-2">
+                                    <a class="nav-link" href="#"><?= $item ?></a>
+                                </li>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
 
-                            <!-- Divider -->
-                            <li class="nav-item d-none d-xl-block text-muted">|</li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-                            <!-- Auth Links -->
-                            <li class="nav-item">
-                                <a href="/register" class="nav-link">
-                                    <i class="fa-solid fa-user-plus me-1"></i>สมัครสมาชิก
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/login" class="nav-link">
-                                    <i class="fa-solid fa-right-to-bracket me-1"></i>เข้าสู่ระบบ
-                                </a>
-                            </li>
+<!-- SlideShow -->
+<section id="slideShow">
+    <div id="carouselExampleIndicators" class="carousel slide container mt-4" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+            <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner rounded shadow">
+            <div class="carousel-item active">
+                <img src="https://www.skyweaver.net/images/media/wallpapers/wallpaper1.jpg" class="d-block w-100"
+                    alt="Slide 1" style="object-fit:cover; height:450px;">
+            </div>
+            <div class="carousel-item">
+                <img src="https://placehold.co/1200x500?text=hello2" class="d-block w-100" alt="Slide 2"
+                    style="object-fit:cover; height:450px;">
+            </div>
+            <div class="carousel-item">
+                <img src="https://placehold.co/1200x500?text=hello3" class="d-block w-100" alt="Slide 3"
+                    style="object-fit:cover; height:450px;">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">ก่อนหน้า</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">ถัดไป</span>
+        </button>
+    </div>
+</section>
 
-                            <!-- Language -->
-                            <li class="nav-item d-flex gap-1 align-items-center">
-                                <a href="?lang=en"
-                                    class="nav-link px-1 <?= $lang == 'en' ? 'fw-bold text-success' : '' ?> ">EN</a>
-                                <span class="text-muted"></span>
-                                <a href="?lang=th"
-                                    class="nav-link px-1 <?= $lang == 'th' ? 'fw-bold text-success' : '' ?>  ">TH</a>
-                            </li>
-                        </ul>
+<?php
+// ข้อมูลสินค้า
+$productsHit = [
+    ["title" => "ชื่อสินค้า 1", "price" => "ลดเหลือ 99 บาท", "img" => "https://placehold.co/1200x500?text=item1"],
+    ["title" => "ชื่อสินค้า 2", "price" => "ลดเหลือ 150 บาท", "img" => "https://placehold.co/1200x500?text=item2"],
+    ["title" => "ชื่อสินค้า 3", "price" => "ลดเหลือ 120 บาท", "img" => "https://placehold.co/1200x500?text=item3"],
+    ["title" => "ชื่อสินค้า 4", "price" => "ลดเหลือ 200 บาท", "img" => "https://placehold.co/1200x500?text=item4"],
+    ["title" => "ชื่อสินค้า 5", "price" => "ลดเหลือ 250 บาท", "img" => "https://placehold.co/1200x500?text=item5"],
+    ["title" => "ชื่อสินค้า 6", "price" => "ลดเหลือ 300 บาท", "img" => "https://placehold.co/1200x500?text=item6"],
+    ["title" => "ชื่อสินค้า 7", "price" => "ลดเหลือ 180 บาท", "img" => "https://placehold.co/1200x500?text=item7"],
+    ["title" => "ชื่อสินค้า 8", "price" => "ลดเหลือ 220 บาท", "img" => "https://placehold.co/1200x500?text=item8"],
+    ["title" => "ชื่อสินค้า 9", "price" => "ลดเหลือ 140 บาท", "img" => "https://placehold.co/1200x500?text=item9"],
+    ["title" => "ชื่อสินค้า 10", "price" => "ลดเหลือ 160 บาท", "img" => "https://placehold.co/1200x500?text=item10"],
+];
+
+$productsSale = [
+    ["title" => "ชื่อสินค้า A", "price" => "ลดเหลือ 199 บาท", "img" => "https://placehold.co/1200x500?text=itemA"],
+    ["title" => "ชื่อสินค้า B", "price" => "ลดเหลือ 250 บาท", "img" => "https://placehold.co/1200x500?text=itemB"],
+    ["title" => "ชื่อสินค้า C", "price" => "ลดเหลือ 220 บาท", "img" => "https://placehold.co/1200x500?text=itemC"],
+    ["title" => "ชื่อสินค้า D", "price" => "ลดเหลือ 300 บาท", "img" => "https://placehold.co/1200x500?text=itemD"],
+    ["title" => "ชื่อสินค้า E", "price" => "ลดเหลือ 350 บาท", "img" => "https://placehold.co/1200x500?text=itemE"],
+    ["title" => "ชื่อสินค้า F", "price" => "ลดเหลือ 180 บาท", "img" => "https://placehold.co/1200x500?text=itemF"],
+    ["title" => "ชื่อสินค้า G", "price" => "ลดเหลือ 220 บาท", "img" => "https://placehold.co/1200x500?text=itemG"],
+    ["title" => "ชื่อสินค้า H", "price" => "ลดเหลือ 260 บาท", "img" => "https://placehold.co/1200x500?text=itemH"],
+    ["title" => "ชื่อสินค้า I", "price" => "ลดเหลือ 240 บาท", "img" => "https://placehold.co/1200x500?text=itemI"],
+    ["title" => "ชื่อสินค้า J", "price" => "ลดเหลือ 280 บาท", "img" => "https://placehold.co/1200x500?text=itemJ"],
+];
+
+// ฟังก์ชันแบ่ง array เป็นกลุ่มละ $size
+function chunkArray($array, $size)
+{
+    $chunks = [];
+    for ($i = 0; $i < count($array); $i += $size) {
+        $chunks[] = array_slice($array, $i, $size);
+    }
+    return $chunks;
+}
+
+// แบ่งกลุ่มสินค้า 5 ชิ้นต่อ slide
+$productChunksHit = chunkArray($productsHit, 5);
+$productChunksSale = chunkArray($productsSale, 5);
+
+// ฟังก์ชันแสดง carousel
+function renderCarousel($id, $productChunks)
+{
+    ?>
+    <div id="<?= htmlspecialchars($id) ?>" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <?php foreach ($productChunks as $index => $chunk): ?>
+                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                    <div class="d-flex justify-content-start gap-3">
+                        <?php foreach ($chunk as $product): ?>
+                            <div class="card border-success" style="min-width: 250px;">
+                                <img src="<?= htmlspecialchars($product['img']) ?>" class="card-img-top" alt="<?= htmlspecialchars($product['title']) ?>">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success"><?= htmlspecialchars($product['title']) ?></h5>
+                                    <p class="card-text">ราคาพิเศษ! <?= htmlspecialchars($product['price']) ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-            </nav>
-            <!-- / Navbar -->
+            <?php endforeach; ?>
+        </div>
+        <button class="carousel-control-prev custom" type="button" data-bs-target="#<?= htmlspecialchars($id) ?>" data-bs-slide="prev" style="left: -2%;">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">ก่อนหน้า</span>
+        </button>
+        <button class="carousel-control-next custom" type="button" data-bs-target="#<?= htmlspecialchars($id) ?>" data-bs-slide="next" style="right: -2%;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">ถัดไป</span>
+        </button>
+    </div>
+    <?php
+}
+?>
 
-            <?php
-            $centerMenus = [
-                ['label' => 'เช็คราคาสินค้า', 'url' => '/check-price', 'img' => 'https://placehold.co/100x100?text=img'],
-                ['label' => 'ข้อมูลร้านค้า', 'url' => '/stores', 'img' => 'https://placehold.co/100x100?text=img'],
-                ['label' => 'ข้อมูลองค์กร', 'url' => '/company', 'img' => 'https://placehold.co/100x100?text=img'],
-                ['label' => 'ข่าวสารและกิจกรรม', 'url' => '/news', 'img' => 'https://placehold.co/100x100?text=img'],
-                ['label' => 'ติดต่อ', 'url' => '/contact', 'img' => 'https://placehold.co/100x100?text=img'],
-            ];
+<section id="popularProductSale" class="container mt-5">
+    <h3 class="mb-4">สินค้าขายดี</h3>
+    <?php renderCarousel('productCarouselHit', $productChunksHit); ?>
 
-            $rightMenus = [
-                ['label' => 'ซื้อสินค้าออนไลน์', 'url' => '/shop', 'class' => 'btn btn-outline-success'],
-            ];
+    <h3 class="mb-4 mt-5">สินค้าราคาพิเศษ</h3>
+    <?php renderCarousel('productCarouselSale', $productChunksSale); ?>
+</section>
 
-            $moreMenus = [
-                ['label' => 'คำถามที่พบบ่อย', 'url' => '/faq'],
-                ['label' => 'นโยบาย', 'url' => '/policy'],
-                ['label' => 'ศูนย์ช่วยเหลือ', 'url' => '/support'],
-            ];
-            ?>
+<style>
+    .carousel-control-prev.custom, .carousel-control-next.custom { 
+        background: #685f5f;
+        width: 4%;
+        height: 25%;
+        margin: auto;
+        border-radius: 20px;
+    }
+</style>
 
-            <nav class="navbar navbar-expand-lg bg-light py-4 shadow-sm">
-                <div class="container d-flex align-items-center justify-content-between flex-wrap">
+<?php
+$blogs = [
+    [
+        "title" => "เคล็ดลับการเลือกวัตถุดิบสดใหม่",
+        "desc" => "เรียนรู้วิธีเลือกวัตถุดิบสดใหม่สำหรับทำขนมไทยอย่างมือโปร พร้อมเทคนิคเก็บรักษาคุณภาพให้คงทน",
+        "img" => "https://placehold.co/400x250?text=Blog+Image+1",
+        "link" => "#"
+    ],
+    [
+        "title" => "สูตรขนมไทยยอดนิยมประจำปี 2025",
+        "desc" => "รวมสูตรขนมไทยยอดนิยมที่ขายดีในตลาด พร้อมขั้นตอนทำง่ายๆ สำหรับผู้เริ่มต้น",
+        "img" => "https://placehold.co/400x250?text=Blog+Image+2",
+        "link" => "#"
+    ],
+    [
+        "title" => "วิธีเก็บรักษาวัตถุดิบให้สดได้นานขึ้น",
+        "desc" => "เทคนิคและวิธีการเก็บรักษาวัตถุดิบสำหรับร้านขนม เพื่อความสดใหม่และประหยัดต้นทุน",
+        "img" => "https://placehold.co/400x250?text=Blog+Image+3",
+        "link" => "#"
+    ],
+    [
+        "title" => "เทรนด์ขนมไทยปี 2025",
+        "desc" => "ติดตามเทรนด์และไอเดียใหม่ๆ ในวงการขนมไทย ที่กำลังมาแรงและสร้างรายได้ดี",
+        "img" => "https://placehold.co/400x250?text=Blog+Image+4",
+        "link" => "#"
+    ],
+];
 
-                    <!-- โลโก้ ซ้ายสุด -->
-                    <a class="navbar-brand me-4" href="/">
-                        <img src="https://placehold.co/150x150?text=LOGO" alt="โลโก้" height="80">
-                    </a>
+// โฆษณา (ads) mockup
+$ads = [
+    [
+        "img" => "https://placehold.co/1200x200?text=Ad+Banner+1",
+        "link" => "#"
+    ],
+    [
+        "img" => "https://placehold.co/1200x200?text=Ad+Banner+2",
+        "link" => "#"
+    ],
+];
+?>
 
-                    <!-- เมนูกลาง + หัวข้อ -->
-                    <div class="d-flex flex-column align-items-center mx-auto">
-                        <div class="d-flex gap-4 flex-wrap justify-content-center">
-                            <?php foreach ($centerMenus as $menu): ?>
-                                <div class="text-center">
-                                    <a href="<?= $menu['url'] ?>" class="nav-link p-0">
-                                        <img src="<?= $menu['img'] ?>" alt="<?= $menu['label'] ?>" class="mb-1 rounded"
-                                            width="80" height="80">
-                                        <div class="small"><?= $menu['label'] ?></div>
-                                    </a>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
+<section id="blog" class="container my-5">
+  <h2 class="mb-4 text-center">บทความและข่าวสาร</h2>
 
-                    <!-- เมนูขวาสุด -->
-                    <div class="d-flex align-items-center gap-2 ms-auto">
-                        <?php foreach ($rightMenus as $menu): ?>
-                            <a href="<?= $menu['url'] ?>" class="<?= $menu['class'] ?>"><?= $menu['label'] ?></a>
-                        <?php endforeach; ?>
+  <div class="row gy-4">
+    <?php foreach ($blogs as $blog): ?>
+      <div class="col-md-6 d-flex">
+        <img src="<?= htmlspecialchars($blog['img']) ?>" alt="<?= htmlspecialchars($blog['title']) ?>" class="img-fluid rounded me-3" style="width: 40%;">
+        <div>
+          <h4><?= htmlspecialchars($blog['title']) ?></h4>
+          <p><?= htmlspecialchars($blog['desc']) ?></p>
+          <a href="<?= htmlspecialchars($blog['link']) ?>" class="btn btn-primary btn-sm">อ่านต่อ</a>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</section>
 
-                        <!-- Dropdown -->
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                เมนูเพิ่มเติม
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <?php foreach ($moreMenus as $menu): ?>
-                                    <li><a class="dropdown-item" href="<?= $menu['url'] ?>"><?= $menu['label'] ?></a></li>
+<section id="ads" class="container my-5">
+  <?php foreach ($ads as $ad): ?>
+    <a href="<?= htmlspecialchars($ad['link']) ?>" target="_blank" rel="noopener" class="d-block mb-4">
+      <img src="<?= htmlspecialchars($ad['img']) ?>" alt="โฆษณา" class="img-fluid rounded" width="100%">
+    </a>
+  <?php endforeach; ?>
+</section> 
+
+<?php
+$footerSections = [
+    [
+        "title" => "Kanom Muang Phet",
+        "content" => [
+            "text" => "เว็บไซต์ขนมไทยแท้ๆ สั่งง่าย แค่ปลายนิ้ว",
+            "contacts" => [
+                "โทร" => "02 023 9903 บริการ 24 ชั่วโมง",
+                "Line Official" => "@kanommuangphet",
+                "เวลาทำการ" => "07:00 น. - 16:00 น"
+            ]
+        ]
+    ],
+    [
+        "title" => "นโยบายเว็บไซต์",
+        "links" => [
+            ["text" => "เกี่ยวกับเรา", "url" => "#"],
+            ["text" => "เงื่อนไขการให้บริการ", "url" => "#", "target" => "_blank"],
+            ["text" => "นโยบายความเป็นส่วนตัว", "url" => "#", "target" => "_blank"],
+            ["text" => "คำถามที่พบบ่อย", "url" => "#", "target" => "_blank"]
+        ]
+    ],
+    [
+        "title" => "ร่วมเป็นส่วนหนึ่งกับเรา",
+        "links" => [
+            ["text" => "วิธีสมัครสมาชิก", "url" => "#"],
+            ["text" => "วิธีการสร้างสินค้า", "url" => "#", "target" => "_blank"],
+            ["text" => "วิธีการใช้ระบบ", "url" => "#", "target" => "_blank"]
+        ]
+    ],
+    // [
+    //     "title" => "ดาวน์โหลดแอป Kanom Muang Phet",
+    //     "images" => [
+    //         ["src" => "/images/appstore.png", "alt" => "App Store"],
+    //         ["src" => "/images/playstore.png", "alt" => "Google Play"]
+    //     ]
+    // ],
+    [
+        "title" => "ติดตามเรา",
+        "socials" => [
+        ["href" => "#", "icon" => "fab fa-facebook-f", "title" => "Facebook"],
+        ["href" => "#", "icon" => "fab fa-instagram", "title" => "Instagram"],
+        ["href" => "#", "icon" => "fab fa-youtube", "title" => "YouTube"],
+        ["href" => "#", "icon" => "fab fa-tiktok", "title" => "TikTok"],
+        ["href" => "#", "icon" => "fab fa-line", "title" => "Line"]
+    ]
+    ]
+];
+?>
+
+ 
+
+<footer id="footer">
+     <div class="dropdown-divider"></div>
+    <div class="pt-5">
+        <div class="container">
+            <div class="row">
+
+                <?php foreach ($footerSections as $section): ?>
+                    <div class="col-sm-12 col-md-6 col-lg-3 footer-list mb-5">
+                        <h3 class="footer-subtitle"><span style="font-size: 18px;"><?= htmlspecialchars($section['title']) ?></span></h3>
+
+                        <?php if (isset($section['content'])): ?>
+                            <p class="small"><?= htmlspecialchars($section['content']['text']) ?></p>
+                            <?php if (isset($section['content']['contacts'])): ?>
+                                <p class="small">
+                                    <?php foreach ($section['content']['contacts'] as $key => $val): ?>
+                                        <?= htmlspecialchars($key) ?> : <?= nl2br(htmlspecialchars($val)) ?><br>
+                                    <?php endforeach; ?>
+                                </p>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php if (isset($section['links'])): ?>
+                            <ul class="small">
+                                <?php foreach ($section['links'] as $link): ?>
+                                    <li>
+                                        <a href="<?= htmlspecialchars($link['url']) ?>"
+                                           <?= isset($link['target']) ? 'target="'.htmlspecialchars($link['target']).'" rel="noopener noreferrer"' : '' ?>>
+                                            <?= htmlspecialchars($link['text']) ?>
+                                        </a>
+                                    </li>
                                 <?php endforeach; ?>
                             </ul>
+                        <?php endif; ?>
+
+                        <?php if (isset($section['images'])): ?>
+                            <div class="d-flex">
+                                <?php foreach ($section['images'] as $img): ?>
+                                    <img src="<?= htmlspecialchars($img['src']) ?>" alt="<?= htmlspecialchars($img['alt']) ?>" class="mr-1">
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (isset($section['socials'])): ?>
+                        <div class="d-flex gap-3">
+                            <?php foreach ($section['socials'] as $social): ?>
+                                <a href="<?= htmlspecialchars($social['href']) ?>" target="_blank" rel="noopener noreferrer" 
+                                title="<?= htmlspecialchars($social['title']) ?>" class="text-decoration-none fs-4">
+                                    <i class="<?= htmlspecialchars($social['icon']) ?>"></i>
+                                </a>
+                            <?php endforeach; ?>
                         </div>
+                    <?php endif; ?>
                     </div>
+                <?php endforeach; ?>
 
-                </div>
-            </nav>
-
-            <hr class="my-4">
-
-            <div class="container my-5">
-                <h2 class="text-center mb-4">หมวดหมู่สินค้า</h2>
-                <div class="row g-4">
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <a href="/category/vegetables" class="text-decoration-none">
-                            <div class="card text-center border-0 shadow-sm h-100">
-                                <div class="card-body">
-                                    <i class="fa-solid fa-leaf fa-2x text-success mb-3"></i>
-                                    <h6 class="text-dark">ผักสด</h6>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <a href="/category/fruits" class="text-decoration-none">
-                            <div class="card text-center border-0 shadow-sm h-100">
-                                <div class="card-body">
-                                    <i class="fa-solid fa-apple-whole fa-2x text-danger mb-3"></i>
-                                    <h6 class="text-dark">ผลไม้</h6>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <a href="/category/meat" class="text-decoration-none">
-                            <div class="card text-center border-0 shadow-sm h-100">
-                                <div class="card-body">
-                                    <i class="fa-solid fa-drumstick-bite fa-2x text-warning mb-3"></i>
-                                    <h6 class="text-dark">เนื้อสัตว์</h6>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <a href="/category/dried" class="text-decoration-none">
-                            <div class="card text-center border-0 shadow-sm h-100">
-                                <div class="card-body">
-                                    <i class="fa-solid fa-seedling fa-2x text-secondary mb-3"></i>
-                                    <h6 class="text-dark">ของแห้ง</h6>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                </div>
             </div>
-
-            <hr class="my-4">
-
-            <div class="container my-5">
-
-                <!-- หัวข้อ + ปุ่ม -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="mb-0">เช็คราคาสินค้า</h2>
-                    <a href="/products" class="btn btn-outline-primary">
-                        ดูสินค้าทั้งหมด
-                    </a>
-                </div>
-
-                <!-- Grid สินค้า -->
-                <div class="row g-4">
-
-                    <!-- สินค้า 1 -->
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm">
-                            <img src="https://placehold.co/600x400?text=Hello+World" class="card-img-top"
-                                alt="ชื่อสินค้า 1">
-                            <div class="card-body">
-                                <h5 class="card-title">ผักกาดขาว</h5>
-                                <p class="card-text text-muted">฿25 / กก.</p>
-                                <a href="/product/1" class="btn btn-sm btn-success">ดูรายละเอียด</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- สินค้า 2 -->
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm">
-                            <img src="https://placehold.co/600x400?text=Hello+World" class="card-img-top"
-                                alt="ชื่อสินค้า 2">
-                            <div class="card-body">
-                                <h5 class="card-title">แตงกวา</h5>
-                                <p class="card-text text-muted">฿20 / กก.</p>
-                                <a href="/product/2" class="btn btn-sm btn-success">ดูรายละเอียด</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- สินค้า 3 -->
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card h-100 shadow-sm">
-                            <img src="https://placehold.co/600x400?text=Hello+World" class="card-img-top"
-                                alt="ชื่อสินค้า 3">
-                            <div class="card-body">
-                                <h5 class="card-title">แครอท</h5>
-                                <p class="card-text text-muted">฿30 / กก.</p>
-                                <a href="/product/3" class="btn btn-sm btn-success">ดูรายละเอียด</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- เพิ่มสินค้าอื่นๆ -->
-                    <!-- คัดลอก col-... เพิ่มได้ตามจำนวนสินค้า -->
-
-                </div>
-            </div>
-
-            <hr class="my-4">
-
-            <!-- Section: สมัครสมาชิก -->
-            <section class="py-5 text-white"
-                style="background-color: #e60012; background-image: url('https://placehold.co/1700x225?text=Background'); background-size: cover;">
-                <div class="container text-center">
-                    <h4 class="fw-bold">สมัครสมาชิก ฟรี!</h4>
-                    <p class="mb-4">ค้นหาข้อมูลและแนวโน้มราคาสินค้าทางการเกษตรย้อนหลังได้ง่ายๆ</p>
-                    <a href="/register" class="btn btn-dark btn-lg shadow px-4 py-2">สมัครสมาชิก คลิกที่นี่</a>
-                </div>
-            </section>
-
-            <!-- Section: จุดเด่นของตลาด -->
-            <section class="py-5 bg-white text-center">
-                <div class="container">
-                    <h3 class="mb-5 fw-bold">ตลาดสี่มุมเมือง</h3>
-                    <p class="mb-4 text-muted">ศูนย์กระจายสินค้าทางการเกษตรที่ใหญ่ที่สุดในประเทศไทย</p>
-
-                    <div class="row g-4">
-
-                        <!-- ข้อดี 1 -->
-                        <div class="col-6 col-md-3">
-                            <div class="text-danger mb-3">
-                                <img src="https://placehold.co/100x100?text=Icon1" alt="icon"
-                                    class="img-fluid rounded-circle bg-white p-2 shadow">
-                            </div>
-                            <p class="mb-0 fw-bold">ลูกค้าหมุนเวียนต่อเนื่อง</p>
-                            <p class="text-muted">มากกว่า <strong>30,000</strong> คนต่อวัน</p>
-                        </div>
-
-                        <!-- ข้อดี 2 -->
-                        <div class="col-6 col-md-3">
-                            <div class="text-danger mb-3">
-                                <img src="https://placehold.co/100x100?text=Icon2" alt="icon"
-                                    class="img-fluid rounded-circle bg-white p-2 shadow">
-                            </div>
-                            <p class="mb-0 fw-bold">พื้นที่จอดรถสะดวก</p>
-                            <p class="text-muted">มากกว่า <strong>4,000</strong> คัน</p>
-                        </div>
-
-                        <!-- ข้อดี 3 -->
-                        <div class="col-6 col-md-3">
-                            <div class="text-danger mb-3">
-                                <img src="https://placehold.co/100x100?text=Icon3" alt="icon"
-                                    class="img-fluid rounded-circle bg-white p-2 shadow">
-                            </div>
-                            <p class="mb-0 fw-bold">แรงงานขนถ่ายสินค้า</p>
-                            <p class="text-muted">มากกว่า <strong>5,000</strong> คน</p>
-                        </div>
-
-                        <!-- ข้อดี 4 -->
-                        <div class="col-6 col-md-3">
-                            <div class="text-danger mb-3">
-                                <img src="https://placehold.co/100x100?text=24h" alt="icon"
-                                    class="img-fluid rounded-circle bg-white p-2 shadow">
-                            </div>
-                            <p class="mb-0 fw-bold">ทำการค้าได้ต่อเนื่อง</p>
-                            <p class="text-muted">ตลอด <strong>24 ชั่วโมง</strong></p>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-
-            <!-- Footer -->
-            <footer class="bg-dark text-light py-5">
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <h5 class="mb-4 border-start border-4 border-primary ps-3 fw-semibold">เกี่ยวกับบริษัท</h5>
-                            <ul class="list-unstyled">
-                                <li><a href="#" class="text-light text-decoration-none d-block mb-2">แนะนำตลาด</a></li>
-                                <li><a href="#" class="text-light text-decoration-none d-block mb-2">บริการของเรา</a>
-                                </li>
-                                <li><a href="#"
-                                        class="text-light text-decoration-none d-block mb-2">กิจกรรมเพื่อสังคม</a></li>
-                                <li><a href="#"
-                                        class="text-light text-decoration-none d-block mb-2">คณะกรรมการบริษัท</a></li>
-                                <li><a href="#"
-                                        class="text-light text-decoration-none d-block mb-2">โรงเรียนพัฒนาวิทยา</a></li>
-                                <li><a href="#" class="text-light text-decoration-none d-block mb-2">คำถามที่พบบ่อย</a>
-                                </li>
-                                <li><a href="#"
-                                        class="text-light text-decoration-none d-block mb-2">ร่วมธุรกิจกับเรา</a></li>
-                                <li><a href="#" class="text-light text-decoration-none d-block mb-2">สมัครงาน</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <h5 class="mb-4 border-start border-4 border-primary ps-3 fw-semibold">ข่าวสาร</h5>
-                            <ul class="list-unstyled">
-                                <li><a href="#"
-                                        class="text-light text-decoration-none d-block mb-2">สื่อประชาสัมพันธ์</a></li>
-                                <li><a href="#" class="text-light text-decoration-none d-block mb-2">วิดีโอ</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <h5 class="mb-4 border-start border-4 border-primary ps-3 fw-semibold">ติดตามเราได้ที่</h5>
-                            <ul class="list-unstyled">
-                                <li class="d-flex align-items-center mb-3">
-                                    <a href="#" class="text-light me-3 fs-5"><i class="fab fa-facebook-f"></i></a>
-                                    <span>ตลาดสี่มุมเมือง</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <a href="#" class="text-light me-3 fs-5"><i class="fab fa-instagram"></i></a>
-                                    <span>@smm_market</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <a href="#" class="text-light me-3 fs-5"><i class="fab fa-tiktok"></i></a>
-                                    <span>@smm_market</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <a href="#" class="text-light me-3 fs-5"><i class="fab fa-youtube"></i></a>
-                                    <span>Simummuang Market</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 mb-4">
-                            <h5 class="mb-4 border-start border-4 border-primary ps-3 fw-semibold">ติดต่อเรา</h5>
-                            <p class="mb-1" style="line-height: 1.7;">
-                                <strong>โทรศัพท์ :</strong> 02-995-0610-3 (24 ชม.)<br>
-                                <strong>ที่อยู่ :</strong> 355/115-116 ม.15 ถ.พหลโยธิน ต.คูคต อ.ลำลูกกา จ.ปทุมธานี
-                                12130<br>
-                                <strong>เวลาทำการ :</strong> 8:00 - 17:00 น.
-                            </p>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 text-center text-secondary small mt-4">
-                            © 2024 Simummuang Market. All Rights Reserved.
-                        </div>
-                    </div>
-                </div>
-            </footer>
-
-            <a href="#"
-                class="btn btn-primary rounded-circle position-fixed d-flex justify-content-center align-items-center"
-                style="width:60px; height:60px; bottom:25px; right:25px; z-index:1050; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-                <i class="fas fa-comments fs-4"></i>
-            </a>
-            <!-- / Footer -->
-
-
         </div>
-        <!-- / Layout page -->
     </div>
-</div>
-<!-- / Layout wrapper -->
+
+    <div class="copyright py-3 text-center bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col"> 
+                    © 2025 Kanom Muang Phet - เว็บไซต์เนื้อหาเกี่ยวกับขนมไทยโดยเฉพาะ
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
 
 <?php renderFooter($config); ?>
