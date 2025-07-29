@@ -1,6 +1,7 @@
 <?php
 function renderHead($config, $pageType = 'main') // default เป็น main
 {
+    session_start(); 
     // เซ็ตค่า class และไฟล์ CSS ตามประเภท
     $htmlClass = '';
     $extraCss = '';
