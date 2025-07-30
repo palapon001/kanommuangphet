@@ -10,8 +10,6 @@ function dbSelectSQL($sql, $params = [], $limit = null)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
-
 // Create
 function dbInsert($table, $data)
 {
@@ -38,7 +36,6 @@ function dbSelect($table, $where = "", $params = [], $limit = null, $columns = '
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
 
 // Update
 function dbUpdate($table, $data, $where, $params = [])
@@ -69,8 +66,6 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
     exit;
 }
 
-
-
 function renderTable($data, $cols = null, $url = '', $config = [])
 {
 
@@ -79,7 +74,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
     if (empty($cols) && !empty($data)) {
         $cols = array_combine(array_keys($data[0]), array_keys($data[0]));
     }
-    ?>
+?>
     <!-- ปุ่มเพิ่มข้อมูล -->
     <div class="mb-3">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal" onclick="openForm('insert')">
@@ -100,7 +95,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
         <tbody>
             <?php foreach ($data as $dataKey => $row): ?>
                 <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
-                      echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+                                                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
                             <?php if ($key === 'avatar_url'): ?>
@@ -118,7 +113,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
                             <? if ($url == 'shop_process.php') { ?>
-                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>" class="btn btn-sm btn-info btn-edit" >
+                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>" class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
                                 </a>
                             <? } ?>
@@ -201,20 +196,15 @@ function renderTable($data, $cols = null, $url = '', $config = [])
         </div>
     </div>
 
-
-
-
-
     <!-- Script DataTable + Modal -->
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             new DataTable('#dynamicTable', {
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
                 },
                 dom: 'Bfrtip',
-                buttons: [
-                    {
+                buttons: [{
                         extend: 'copy',
                         exportOptions: {
                             columns: ':not(:last-child)'
@@ -237,7 +227,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                         exportOptions: {
                             columns: ':not(:last-child)'
                         },
-                        customize: function (doc) {
+                        customize: function(doc) {
                             // กำหนดฟอนต์ภาษาไทย
                             doc.defaultStyle = {
                                 font: 'THSarabun',
@@ -261,7 +251,9 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                 ],
                 pageLength: 10,
                 lengthMenu: [5, 10, 25, 50],
-                order: [[0, 'asc']]
+                order: [
+                    [0, 'asc']
+                ]
             });
 
             // เพิ่มฟอนต์ภาษาไทยสำหรับ pdfMake
@@ -276,6 +268,5 @@ function renderTable($data, $cols = null, $url = '', $config = [])
             }
         });
     </script>
-
-    <?php
+<?php
 }
