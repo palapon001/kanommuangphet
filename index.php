@@ -24,9 +24,7 @@ function chunkArray($array, $size)
     return $chunks;
 }
 
-// แบ่งกลุ่มสินค้า 5 ชิ้นต่อ slide
-$productChunksHit = chunkArray($productsHit, 5);
-$productChunksSale = chunkArray($productsSale, 5);
+
 
 // ฟังก์ชันแสดง carousel
 function renderCarousel($id, $productChunks)
@@ -68,13 +66,12 @@ function renderCarousel($id, $productChunks)
 ?>
 
 <?php
-
+// ดึงข้อมูลจากฐานข้อมูล
 $model = [
     'shops' => dbSelect('shops'),
     'products' => dbSelect('products'),
     'ingredients' => dbSelect('ingredients'),
 ];
-
 
 if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') {
     echo '<div style="background: #000; color: #64ff00; padding: 4%; max-height: 400px; overflow: auto;">';
@@ -88,6 +85,21 @@ if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') {
 if ($_GET['debug'] == 'unset') {
     session_unset();
 }
+
+// เตรียม productsHit สำหรับไปแสดงผลในหน้าเว็บ
+$productsHit = [];
+
+foreach ($model['products'] as $product) {
+    $productsHit[] = [
+        "title" => $product['name'],
+        "price" => "ลดเหลือ " . number_format($product['price'], 0) . " บาท",
+        "img" => $product['image'] ?: "images/products/default.jpg", // หากไม่มีภาพ ให้ใช้ default
+    ];
+}
+
+// แบ่งกลุ่มสินค้า 5 ชิ้นต่อ slide
+$productChunksHit = chunkArray($productsHit, 5);
+$productChunksSale = chunkArray($productsSale, 5);
 ?>
 
 
