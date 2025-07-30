@@ -1,6 +1,8 @@
 <?php
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
+require_once __DIR__ . '/src/connect.php';
+require_once __DIR__ . '/src/function.php';
 $host = $_SERVER['HTTP_HOST'];
 $lang = $_GET['lang'] ?? 'th';
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -66,13 +68,25 @@ function renderCarousel($id, $productChunks)
 ?>
 
 <?php
-if ($_GET['debug'] == 'dev') {
-    echo '<pre style="
-    background: #000;
-    color: #64ff00;
-    padding: 4%;">';
+
+$model = [
+    'shops' => dbSelect('shops'),
+    'products' => dbSelect('products'),
+    'ingredients' => dbSelect('ingredients'),
+];
+
+
+if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') {
+    echo '<div style="background: #000; color: #64ff00; padding: 4%; max-height: 400px; overflow: auto;">';
+    echo '<pre style="margin:0;">';
     print_r($_SESSION);
+    print_r($model);
     echo '</pre>';
+    echo '</div>';
+}
+
+if ($_GET['debug'] == 'unset') {
+    session_unset();
 }
 ?>
 
@@ -92,8 +106,10 @@ if ($_GET['debug'] == 'dev') {
 
             <div class="d-flex align-items-center">
                 <?php if (isset($_SESSION['user_name'])) { ?>
-                    <a href="#" id="loginButton" class="btn btn-outline-primary me-3"><?= htmlspecialchars($_SESSION['user_name']); ?></a>
-                    <button type="button" id="logoutButton" class="btn btn-outline-danger me-3"><?= $modelIndex[$lang]['logout_button'] ?? 'Logout' ?></button>
+                    <a href="#" id="loginButton"
+                        class="btn btn-outline-primary me-3"><?= htmlspecialchars($_SESSION['user_name']); ?></a>
+                    <button type="button" id="logoutButton"
+                        class="btn btn-outline-danger me-3"><?= $modelIndex[$lang]['logout_button'] ?? 'Logout' ?></button>
                     <script>
                         document.getElementById('logoutButton').addEventListener('click', function (e) {
                             e.preventDefault();

@@ -71,7 +71,7 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
 
 
 
-function renderTable($data, $cols = null, $url = '')
+function renderTable($data, $cols = null, $url = '', $config = [])
 {
 
     $path = '../process/' . $url;
@@ -117,6 +117,11 @@ function renderTable($data, $cols = null, $url = '')
                     <?php endforeach; ?>
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
+                            <? if ($url == 'shop_process.php') { ?>
+                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>" class="btn btn-sm btn-info btn-edit" >
+                                    ตัวอย่างหน้าเว็บ
+                                </a>
+                            <? } ?>
                             <button type="button" class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal"
                                 data-bs-target="#modal-<?= $row['id'] ?>">
                                 แก้ไข
@@ -212,7 +217,7 @@ function renderTable($data, $cols = null, $url = '')
                     {
                         extend: 'copy',
                         exportOptions: {
-                            columns: ':not(:last-child)'  // ไม่เอาคอลัมน์สุดท้าย
+                            columns: ':not(:last-child)'
                         }
                     },
                     {
@@ -231,7 +236,21 @@ function renderTable($data, $cols = null, $url = '')
                         extend: 'pdf',
                         exportOptions: {
                             columns: ':not(:last-child)'
-                        }, 
+                        },
+                        customize: function (doc) {
+                            // กำหนดฟอนต์ภาษาไทย
+                            doc.defaultStyle = {
+                                font: 'THSarabun',
+                                fontSize: 16
+                            };
+                            // จัดระเบียบตาราง PDF
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.styles.tableHeader.alignment = 'center';
+                            doc.styles.tableBodyEven.alignment = 'center';
+                            doc.styles.tableBodyOdd.alignment = 'center';
+                            // กำหนด margin
+                            doc.pageMargins = [20, 20, 20, 20];
+                        }
                     },
                     {
                         extend: 'print',
@@ -244,6 +263,17 @@ function renderTable($data, $cols = null, $url = '')
                 lengthMenu: [5, 10, 25, 50],
                 order: [[0, 'asc']]
             });
+
+            // เพิ่มฟอนต์ภาษาไทยสำหรับ pdfMake
+            if (window.pdfMake) {
+                if (!pdfMake.fonts) pdfMake.fonts = {};
+                pdfMake.fonts['THSarabun'] = {
+                    normal: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew-webfont.ttf',
+                    bold: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_bold-webfont.ttf',
+                    italics: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_italic-webfont.ttf',
+                    bolditalics: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_bolditalic-webfont.ttf'
+                };
+            }
         });
     </script>
 

@@ -15,11 +15,10 @@
     <ul class="menu-inner py-1">
 
         <li class="menu-item home">
-            <a href="<?= $config['url'] ?>"
-                class="menu-link"
+            <a href="<?= $config['url'] ?>" target="_blank" class="menu-link"
                 onclick="return confirm('หน้าหลัก fontend');">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Dashboard">หน้าหลัก fontend</div>
+                <div data-i18n="Dashboard">หน้าบ้าน</div>
             </a>
         </li>
 
@@ -27,7 +26,7 @@
         <li class="menu-item <?= ($page == '' || $page == 'dashboard') ? 'active' : '' ?>">
             <a href="<?= $config['url'] . $config['role'] ?>"
                 class="menu-link <?= ($page == '' || $page == 'dashboard') ? 'active' : '' ?>">
-              <i class="menu-icon tf-icons bx bx-grid-alt"></i>
+                <i class="menu-icon tf-icons bx bx-grid-alt"></i>
                 <div data-i18n="Dashboard">แดชบอร์ด</div>
             </a>
         </li>

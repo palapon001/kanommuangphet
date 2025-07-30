@@ -21,6 +21,6 @@ $cols = [
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">ตาราง /</span> ร้านค้า</h4>
     <hr class="my-5" />
    <div class="rounded bg-white  table-responsive" style="padding: 10px 15px;">
-        <?= renderTable( $shops ,$cols, 'shop_process.php'); ?>
+        <?= renderTable( $shops ,$cols, 'shop_process.php', $config); ?>
     </div>
 </div>
