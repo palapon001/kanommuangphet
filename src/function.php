@@ -118,7 +118,8 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
                             <? if ($url == 'shop_process.php') { ?>
-                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>" class="btn btn-sm btn-info btn-edit" >
+                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
+                                    class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
                                 </a>
                             <? } ?>
@@ -279,3 +280,52 @@ function renderTable($data, $cols = null, $url = '', $config = [])
 
     <?php
 }
+
+// ฟังก์ชันแบ่ง array เป็นกลุ่มละ $size
+function chunkArray($array, $size)
+{
+    $chunks = [];
+    for ($i = 0; $i < count($array); $i += $size) {
+        $chunks[] = array_slice($array, $i, $size);
+    }
+    return $chunks;
+}
+
+// ฟังก์ชันแสดง carousel
+function renderCarousel($id, $productChunks)
+{
+    ?>
+    <div id="<?= htmlspecialchars($id) ?>" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <?php foreach ($productChunks as $index => $chunk): ?>
+                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                    <div class="d-flex justify-content-start gap-3">
+                        <?php foreach ($chunk as $product): ?>
+                            <div class="card border-success" style="min-width: 250px;">
+                                <img src="<?= htmlspecialchars($product['img']) ?>" class="card-img-top"
+                                    alt="<?= htmlspecialchars($product['title']) ?>"
+                                    onerror="this.onerror=null;this.src='./assets/img/items/placehold.jpg';">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success"><?= htmlspecialchars($product['title']) ?></h5>
+                                    <p class="card-text">ราคาพิเศษ! <?= htmlspecialchars($product['price']) ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <button class="carousel-control-prev custom" type="button" data-bs-target="#<?= htmlspecialchars($id) ?>"
+            data-bs-slide="prev" style="left: -3%;">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">ก่อนหน้า</span>
+        </button>
+        <button class="carousel-control-next custom" type="button" data-bs-target="#<?= htmlspecialchars($id) ?>"
+            data-bs-slide="next" style="right: -3%;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">ถัดไป</span>
+        </button>
+    </div>
+    <?php
+}
+?>

@@ -14,58 +14,6 @@ $config = [
 renderHead($config, 'auth');
 include 'src/model.php';
 
-// ฟังก์ชันแบ่ง array เป็นกลุ่มละ $size
-function chunkArray($array, $size)
-{
-    $chunks = [];
-    for ($i = 0; $i < count($array); $i += $size) {
-        $chunks[] = array_slice($array, $i, $size);
-    }
-    return $chunks;
-}
-
-
-
-// ฟังก์ชันแสดง carousel
-function renderCarousel($id, $productChunks)
-{
-    ?>
-    <div id="<?= htmlspecialchars($id) ?>" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <?php foreach ($productChunks as $index => $chunk): ?>
-                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                    <div class="d-flex justify-content-start gap-3">
-                        <?php foreach ($chunk as $product): ?>
-                            <div class="card border-success" style="min-width: 250px;">
-                                <img src="<?= htmlspecialchars($product['img']) ?>" class="card-img-top"
-                                    alt="<?= htmlspecialchars($product['title']) ?>"
-                                    onerror="this.onerror=null;this.src='./assets/img/items/placehold.jpg';">
-                                <div class="card-body">
-                                    <h5 class="card-title text-success"><?= htmlspecialchars($product['title']) ?></h5>
-                                    <p class="card-text">ราคาพิเศษ! <?= htmlspecialchars($product['price']) ?></p>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <button class="carousel-control-prev custom" type="button" data-bs-target="#<?= htmlspecialchars($id) ?>"
-            data-bs-slide="prev" style="left: -3%;">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">ก่อนหน้า</span>
-        </button>
-        <button class="carousel-control-next custom" type="button" data-bs-target="#<?= htmlspecialchars($id) ?>"
-            data-bs-slide="next" style="right: -3%;">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">ถัดไป</span>
-        </button>
-    </div>
-    <?php
-}
-?>
-
-<?php
 // ดึงข้อมูลจากฐานข้อมูล
 $model = [
     'shops' => dbSelect('shops'),
@@ -86,15 +34,21 @@ if ($_GET['debug'] == 'unset') {
     session_unset();
 }
 
-// เตรียม productsHit สำหรับไปแสดงผลในหน้าเว็บ
-$productsHit = [];
-
-foreach ($model['products'] as $product) {
-    $productsHit[] = [
-        "title" => $product['name'],
-        "price" => "ลดเหลือ " . number_format($product['price'], 0) . " บาท",
-        "img" => $product['image'] ?: "images/products/default.jpg", // หากไม่มีภาพ ให้ใช้ default
-    ];
+if (isset($model['products'])) {
+    $productsHit = [];
+    $productsSale = [];
+    foreach ($model['products'] as $product) {
+        $productsHit[] = [
+            "title" => $product['name'],
+            "price" => "ลดเหลือ " . number_format($product['price'], 0) . " บาท",
+            "img" => $product['image'] ?: "images/products/default.jpg", // หากไม่มีภาพ ให้ใช้ default
+        ];
+        $productsSale[] = [
+            "title" => $product['name'],
+            "price" => "ลดเหลือ " . number_format($product['price'], 0) . " บาท",
+            "img" => $product['image'] ?: "images/products/default.jpg", // หากไม่มีภาพ ให้ใช้ default
+        ];
+    }
 }
 
 // แบ่งกลุ่มสินค้า 5 ชิ้นต่อ slide
