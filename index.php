@@ -21,15 +21,20 @@ $model = [
     'ingredients' => dbSelect('ingredients'),
 ];
 
-if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') {
-    echo '<div style="background: #000; color: #64ff00; padding: 4%; max-height: 400px; overflow: auto;">';
-    echo '<pre style="margin:0;">';
-    print_r($_SESSION);
-    print_r($model);
-    echo '</pre>';
-    echo '</div>';
-}
+ if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') { ?>
+    <div class="mb-3">
+        <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#debugInfo" aria-expanded="false" aria-controls="debugInfo">
+            แสดงข้อมูล Debug
+        </button>
+        <div class="collapse mt-2" id="debugInfo">
+            <div class="card card-body bg-dark text-success" style="max-height: 400px; overflow: auto; font-family: monospace;">
+                <pre style="margin:0;"><?php print_r($_SESSION); print_r($model); ?></pre>
+            </div>
+        </div>
+    </div>
+<?php } ?>
 
+<?php
 if ($_GET['debug'] == 'unset') {
     session_unset();
 }

@@ -10,8 +10,6 @@ function dbSelectSQL($sql, $params = [], $limit = null)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
-
 // Create
 function dbInsert($table, $data)
 {
@@ -38,7 +36,6 @@ function dbSelect($table, $where = "", $params = [], $limit = null, $columns = '
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
 
 // Update
 function dbUpdate($table, $data, $where, $params = [])
@@ -68,7 +65,6 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
     header('Location: ' . $url);
     exit;
 }
-
 
 
 function renderTable($data, $cols = null, $url = '', $config = [])
@@ -202,10 +198,6 @@ function renderTable($data, $cols = null, $url = '', $config = [])
         </div>
     </div>
 
-
-
-
-
     <!-- Script DataTable + Modal -->
     <script>
         $(document).ready(function () {
@@ -329,3 +321,35 @@ function renderCarousel($id, $productChunks)
     <?php
 }
 ?>
+<?
+function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image') {
+    $uploadedPaths = [];
+
+    // Ensure the target directory exists
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true);
+    }
+
+    // Count total files
+    $totalFiles = count($_FILES[$inputName]['name']);
+
+    for ($i = 0; $i < $totalFiles; $i++) {
+        if ($_FILES[$inputName]['error'][$i] === UPLOAD_ERR_OK) {
+            $tmpName = $_FILES[$inputName]['tmp_name'][$i];
+            $originalName = $_FILES[$inputName]['name'][$i];
+
+            // Get file extension
+            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+            // Generate unique filename (e.g. profile-0001-1.jpg)
+            $filename = $baseFilename . '-' . str_pad($i + 1, 2, '0', STR_PAD_LEFT) . '.' . $extension;
+            $destination = rtrim($targetDir, '/') . '/' . $filename;
+
+            if (move_uploaded_file($tmpName, $destination)) {
+                $uploadedPaths[] = $destination;
+            }
+        }
+    }
+
+    return $uploadedPaths;
+}
