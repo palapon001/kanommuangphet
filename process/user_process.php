@@ -2,13 +2,13 @@
 require_once __DIR__ . '/../src/connect.php';
 require_once __DIR__ . '/../src/function.php';
 
-if ($_POST['debug'] == 'dev') {
-    $act = $_POST['act'] ?? '';
-    echo '<pre>';
-    echo 'act = ' . $act . '<br>';
-    print_r($_POST);
-    echo '</pre>';
-}
+
+$act = $_POST['act'] ?? '';
+echo '<pre>';
+echo 'act = ' . $act . '<br>';
+print_r($_POST);
+echo '</pre>';
+
 
 $act = $_POST['act'] ?? $_GET['act'] ?? '';
 if (!in_array($act, ['insert', 'update', 'delete'])) {

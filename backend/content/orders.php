@@ -20,14 +20,14 @@ ORDER BY orders.id ASC";
 $orders = dbSelectSQL($sql);
 
 if ($_GET['debug'] == 'dev') {
-    echo '<pre> Table orders';
-    print_r($orders);
-    echo '</pre>';
+  echo '<pre> Table orders';
+  print_r($orders);
+  echo '</pre>';
 }
 ?>
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">ตาราง /</span> ออเดอร์</h4>
-    <hr class="my-5" />
-    <?= renderTable($orders,''); ?>
+  <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">ตาราง /</span> ออเดอร์</h4>
+  <hr class="my-5" />
+  <?= renderTable($orders, '', 'orders_process.php'); ?>
 </div>

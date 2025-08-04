@@ -11,7 +11,7 @@ $config = [
 function getPDOConnection()
 {
     // ตรวจจาก SERVER_NAME หรือ environment
-    if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    if ($_SERVER['HTTP_HOST'] === 'localhost' || $_SERVER['HTTP_HOST'] === '192.168.1.147' ) {
         // โหมด offline (บนเครื่อง local)
         $host = 'localhost';
         $dbname = 'kanommuangphet';

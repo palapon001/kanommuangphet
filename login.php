@@ -12,7 +12,10 @@ renderHead($config, 'auth');
 ?>
 
 <!-- Content -->
-
+<button type="button" class="btn btn-secondary position-absolute" style="left: 20px; top: 20px; z-index: 10;"
+  onclick="window.history.back();">
+  กลับไปก่อนหน้า
+</button>
 <div class="container-xxl">
   <div class="authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
@@ -23,14 +26,15 @@ renderHead($config, 'auth');
           <div class="app-brand justify-content-center">
             <a href="index.html" class="app-brand-link gap-2">
               <span class="app-brand-logo demo">
-            <img src="https://placehold.co/100x40?text=Logo" alt="logo login">
+                <img src="https://placehold.co/100x40?text=Logo" alt="logo login">
               </span>
             </a>
           </div>
           <!-- /Logo -->
           <h4 class="mb-2">เข้าสู่ระบบ</h4>
           <p class="mb-4">กรุณาเข้าสู่ระบบเพื่อเริ่มต้นการผจญภัย</p>
-          <form id="formAuthentication" class="mb-3" action="<?= $config['url'] ?>process/login_process.php" method="post">
+          <form id="formAuthentication" class="mb-3" action="<?= $config['url'] ?>process/login_process.php"
+            method="post">
             <div class="mb-3">
               <label for="email" class="form-label">อีเมล</label>
               <input type="email" class="form-control" id="email" name="email" placeholder="กรุณากรอกอีเมล" required />
@@ -40,7 +44,7 @@ renderHead($config, 'auth');
               <div class="input-group input-group-merge">
                 <input type="password" id="password" name="password" class="form-control"
                   placeholder="กรุณากรอกรหัสผ่าน" aria-describedby="password" required />
-                  <input type="hidden" name="debug" value="<?= $_GET['debug'] ?? '' ?>">
+                <input type="hidden" name="debug" value="<?= $_GET['debug'] ?? '' ?>">
                 <span class="input-group-text cursor-pointer"><i class='bx bx-hide'></i></span>
               </div>
             </div>
