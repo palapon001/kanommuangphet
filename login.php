@@ -1,12 +1,9 @@
 <?php
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
-$host = $_SERVER['HTTP_HOST'];
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $config = [
   'title' => 'kanommuangphet',
   'description' => 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม',
-  'url' => "{$protocol}://{$host}/kanommuangphet/"
 ];
 renderHead($config, 'auth');
 ?>

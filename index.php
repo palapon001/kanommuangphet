@@ -2,14 +2,11 @@
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
 require_once __DIR__ . '/src/connect.php';
-require_once __DIR__ . '/src/function.php';
-$host = $_SERVER['HTTP_HOST'];
+require_once __DIR__ . '/src/function.php'; 
 $lang = $_GET['lang'] ?? 'th';
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $config = [
     'title' => $modelIndex[$lang]['navbar_brand_text'],
-    'description' => $modelIndex[$lang]['description'],
-    'url' => "{$protocol}://{$host}/kanommuangphet/"
+    'description' => $modelIndex[$lang]['description']
 ];
 renderHead($config, 'auth');
 include 'src/model.php';

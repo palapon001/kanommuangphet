@@ -1,11 +1,8 @@
 <?php
 require_once __DIR__ . '/src/header_footer.php';
-$host = $_SERVER['HTTP_HOST'];
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $config = [
   'title' => 'kanommuangphet - Register',
   'description' => 'สมัครสมาชิกใหม่',
-  'url' => "{$protocol}://{$host}/kanommuangphet/"
 ];
 renderHead($config, 'auth');
 ?>

@@ -321,6 +321,7 @@ function renderCarousel($id, $productChunks)
     <?php
 }
 ?>
+
 <?
 function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image') {
     $uploadedPaths = [];
@@ -353,3 +354,4 @@ function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename
 
     return $uploadedPaths;
 }
+?>
