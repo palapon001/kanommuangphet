@@ -14,7 +14,7 @@ renderHead($config, 'auth');
 <div class="container-xxl">
   <div class="authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
-      <? if ($_GET['debug'] == 'dev') : ?>
+      <?php if ($_GET['debug'] == 'dev') : ?>
         <style>
           body {
             background: #252525 !important;
@@ -25,7 +25,7 @@ renderHead($config, 'auth');
             background: none !important;
           }
         </style>
-      <? endif; ?>
+      <?php endif; ?>
       <!-- Register -->
       <div class="card">
         <div class="card-body">
