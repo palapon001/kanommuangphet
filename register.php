@@ -1,9 +1,8 @@
 <?php
+require_once __DIR__ . '/src/connect.php';
 require_once __DIR__ . '/src/header_footer.php';
-$config = [
-  'title' => 'kanommuangphet - Register',
-  'description' => 'สมัครสมาชิกใหม่',
-];
+$config['title'] = 'kanommuangphet - Register';
+$config['description'] = 'สมัครสมาชิกใหม่';
 renderHead($config, 'auth');
 ?>
 

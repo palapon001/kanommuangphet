@@ -1,21 +1,31 @@
 <?php
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
-$config = [
-  'title' => 'kanommuangphet',
-  'description' => 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม',
-];
+$config['title'] = 'kanommuangphet';
+$config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม';
 renderHead($config, 'auth');
 ?>
 
 <!-- Content -->
-<button type="button" class="btn btn-secondary position-absolute" style="left: 20px; top: 20px; z-index: 10;"
+<button type="button" class="btn btn-<?= $_GET['debug'] == 'dev' ? 'light' : 'secondary'; ?>  position-absolute" style="left: 20px; top: 20px; z-index: 10; font-family: 'Kanit';"
   onclick="window.history.back();">
   กลับไปก่อนหน้า
 </button>
 <div class="container-xxl">
   <div class="authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
+      <? if ($_GET['debug'] == 'dev') : ?>
+        <style>
+          body {
+            background: #252525 !important;
+          }
+
+          .authentication-wrapper.authentication-basic .authentication-inner:before,
+          .authentication-wrapper.authentication-basic .authentication-inner:after {
+            background: none !important;
+          }
+        </style>
+      <? endif; ?>
       <!-- Register -->
       <div class="card">
         <div class="card-body">

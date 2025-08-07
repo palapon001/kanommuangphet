@@ -139,11 +139,61 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
 
                                     <?php foreach (array_keys($row) as $key): ?>
-                                        <div class="mb-3">
-                                            <label class="form-label"><?= htmlspecialchars($key) ?></label>
-                                            <input type="text" name="<?= $key ?>" value="<?= htmlspecialchars($row[$key]) ?>"
-                                                class="form-control" <?= $key === 'id' ? 'readonly' : '' ?>>
-                                        </div>
+                                        <?php switch ($key):
+                                            case 'role': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($key) ?></label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="admin" <?= $row[$key] === 'admin' ? 'selected' : '' ?>>Admin</option>
+                                                        <option value="user" <?= $row[$key] === 'user' ? 'selected' : '' ?>>User</option>
+                                                        <option value="vendor" <?= $row[$key] === 'vendor' ? 'selected' : '' ?>>Vendor</option>
+                                                    </select>
+                                                </div>
+                                                <?php break; ?>
+
+                                            <?php
+                                            case 'signup_source': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($key) ?></label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="Web" <?= $row[$key] === 'Web' ? 'selected' : '' ?>>Web</option>
+                                                        <option value="Line" <?= $row[$key] === 'Line' ? 'selected' : '' ?>>Line</option>
+                                                    </select>
+                                                </div>
+                                                <?php break; ?>
+
+                                            <?php
+                                            case 'avatar_url': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($key) ?></label>
+                                                    <input type="file" name="<?= $key ?>" class="form-control">
+                                                    <?php if (!empty($row[$key])): ?>
+                                                        <div class="mt-2">
+                                                            <img src="<?= htmlspecialchars($row[$key]) ?>"
+                                                                alt="Avatar" style="max-width: 150px; height: auto;">
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <?php break; ?>
+
+                                            <?php
+                                            case 'created_at': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>"
+                                                        value="<?= htmlspecialchars($row[$key]) ?>" class="form-control" readonly>
+                                                </div>
+                                                <?php break; ?>
+
+                                            <?php
+                                            default: ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= htmlspecialchars($row[$key]) ?>"
+                                                        class="form-control" <?= $key === 'id' ? 'readonly' : '' ?>>
+                                                </div>
+                                                <?php break; ?>
+                                        <?php endswitch; ?>
                                     <?php endforeach; ?>
 
                                     <div class="modal-footer">
@@ -284,7 +334,7 @@ function chunkArray($array, $size)
 // ฟังก์ชันแสดง carousel
 function renderCarousel($id, $productChunks)
 {
-    ?>
+?>
     <div id="<?= htmlspecialchars($id) ?>" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <?php foreach ($productChunks as $index => $chunk): ?>
@@ -316,12 +366,13 @@ function renderCarousel($id, $productChunks)
             <span class="visually-hidden">ถัดไป</span>
         </button>
     </div>
-    <?php
+<?php
 }
 ?>
 
 <?
-function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image') {
+function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image')
+{
     $uploadedPaths = [];
 
     // Ensure the target directory exists
