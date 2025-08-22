@@ -24,7 +24,7 @@ if (isset($shop)) {
         // 'ingredients' => dbSelect('ingredients'),
     ];
 
-    // $modelIndex[$lang]['navbar_brand_text']
+    $modelIndex[$lang]['navbar_brand_text'] = $model['shops'][0]['name'];
 
 } else {
     // ดึงข้อมูลจากฐานข้อมูล
