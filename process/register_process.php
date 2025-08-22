@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once __DIR__ . '/../src/connect.php';
+require_once __DIR__ . '/../src/connect.php'; 
 
 // เชื่อมต่อฐานข้อมูล
 $pdo = getPDOConnection();
 
 $name = $_POST['name'];
 $email = $_POST['email'];
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$password = password_hash($_POST['password'], PASSWORD_DEFAULT); 
 $phone = $_POST['phone'] ?? null;
 $role = 'user';
 $login_type = 'normal';
@@ -20,13 +20,10 @@ if ($checkEmail->fetchColumn() > 0) {
     header("Location: " . $config['url'] . "register.php?alert=error&text=อีเมลนี้มีอยู่ในระบบแล้ว");
     exit;
 }
-
 // ถ้าอีเมลไม่ซ้ำ -> สมัครได้
 $sql = "INSERT INTO users (name, email, password, phone, role, login_type, created_at)
         VALUES (?, ?, ?, ?, ?, ?, NOW())";
-// ถ้าอีเมลไม่ซ้ำ -> สมัครได้
-$sql = "INSERT INTO users (name, email, password, phone, role, login_type, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, NOW())";
+$stmt = $pdo->prepare($sql);
 $stmt = $pdo->prepare($sql);
 
 if ($stmt->execute([$name, $email, $password, $phone, $role, $login_type])) {

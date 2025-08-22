@@ -169,7 +169,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                                                 </div>
                                                 <?php break;
                                             case 'avatar_url':
-                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'].'_'. $row['name'].'/';
+                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
                                             case 'id': ?>
@@ -185,7 +185,6 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                                                     <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control">
                                                 </div>
                                         <?php endswitch; ?>
-
                                     <?php endforeach; ?>
 
                                     <div class="modal-footer">
