@@ -78,6 +78,11 @@ function renderHead($config, $pageType = 'main') // default เป็น main
     </head>
 
     <body>
+        <script>
+            function setModalImage(src) {
+                document.getElementById('modalAvatar').src = src;
+            }
+        </script>
         <!-- Script DataTable -->
         <script>
             $(document).ready(function () {

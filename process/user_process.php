@@ -107,7 +107,7 @@ switch ($act) {
 
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             if (in_array($fileExt, $allowed)) {
-                $newFileName = $id . '_' . time() . '.' . $fileExt;
+                $newFileName = $id . '_profile' . '.' . $fileExt;
 
                 // path เต็มของไฟล์
                 $fullPath = rtrim($uploadPath, '/') . '/' . $newFileName;
@@ -117,7 +117,12 @@ switch ($act) {
 
                 if (move_uploaded_file($fileTmp, $fullPath)) {
                     echo json_encode(['status' => 'success', 'file' => $newFileName, 'path' => $fullPath]);
-                    redirectWithAlert('success', 'อัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
+                    if (dbUpdate('users', ['avatar_url' => $fullPath ] , 'id = :id', ['id' => $id])) {
+                        echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true); 
+                        redirectWithAlert('success', 'อัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
+                    } else { 
+                        redirectWithAlert('error', 'เกิดข้อผิดพลาดอัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
+                    }
                 } else {
                     echo json_encode(['status' => 'error', 'message' => 'ไม่สามารถบันทึกไฟล์ได้', 'path' => $fullPath]);
                 }

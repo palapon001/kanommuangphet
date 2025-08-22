@@ -100,8 +100,20 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                         <td>
                             <?php if ($key === 'avatar_url'): ?>
                                 <?php if (!empty($row[$key])): ?>
-                                    <img src="<?= htmlspecialchars($row[$key]) ?>" width="40" height="40" class="rounded-circle"
-                                        alt="avatar">
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]) ?>')">
+                                        ดูภาพ
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                    <img id="modalAvatar" src="" class="img-fluid rounded" alt="avatar">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
@@ -192,6 +204,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                                         <button type="submit" class="btn btn-primary">บันทึก</button>
                                     </div>
                                 </form>
+                                <div class="dropdown-divider"></div>
                                 <?php
                                 renderImageUpload($path, $imgData['id'], $imgData['name'], $imgData['currentImage'], $imgData['uploadPath']);
                                 ?>

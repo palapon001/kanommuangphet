@@ -2,7 +2,7 @@
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
 require_once __DIR__ . '/src/connect.php';
-require_once __DIR__ . '/src/function.php'; 
+require_once __DIR__ . '/src/function.php';
 $lang = $_GET['lang'] ?? 'th';
 $config = [
     'title' => $modelIndex[$lang]['navbar_brand_text'],
@@ -11,21 +11,44 @@ $config = [
 renderHead($config, 'auth');
 include 'src/model.php';
 
-// ดึงข้อมูลจากฐานข้อมูล
-$model = [
-    'shops' => dbSelect('shops'),
-    'products' => dbSelect('products'),
-    'ingredients' => dbSelect('ingredients'),
-];
+$shop = ltrim($_GET['shop'], '0');
+if (isset($shop)) {
+    // ดึงข้อมูลจากฐานข้อมูล
+    $model = [
+        'shops' => dbSelect(
+            'shops',
+            'id LIKE :q1',
+            [':q1' => "%$shop%"],
+        ),
+        // 'products' => dbSelect('products'),
+        // 'ingredients' => dbSelect('ingredients'),
+    ];
 
- if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') { ?>
+    // $modelIndex[$lang]['navbar_brand_text']
+
+} else {
+    // ดึงข้อมูลจากฐานข้อมูล
+    $model = [
+        'shops' => dbSelect('shops'),
+        'products' => dbSelect('products'),
+        'ingredients' => dbSelect('ingredients'),
+    ];
+}
+
+
+
+
+if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') { ?>
     <div class="mb-3">
-        <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#debugInfo" aria-expanded="false" aria-controls="debugInfo">
+        <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#debugInfo"
+            aria-expanded="false" aria-controls="debugInfo">
             แสดงข้อมูล Debug
         </button>
         <div class="collapse mt-2" id="debugInfo">
-            <div class="card card-body bg-dark text-success" style="max-height: 400px; overflow: auto; font-family: monospace;">
-                <pre style="margin:0;"><?php print_r($_SESSION); print_r($model); ?></pre>
+            <div class="card card-body bg-dark text-success"
+                style="max-height: 400px; overflow: auto; font-family: monospace;">
+                <pre style="margin:0;"><?php print_r($_SESSION);
+                print_r($model); ?></pre>
             </div>
         </div>
     </div>
