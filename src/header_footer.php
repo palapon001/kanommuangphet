@@ -1,7 +1,7 @@
 <?php
 function renderHead($config, $pageType = 'main') // default เป็น main
 {
-    session_start(); 
+    session_start();
     // เซ็ตค่า class และไฟล์ CSS ตามประเภท
     $htmlClass = '';
     $extraCss = '';
@@ -78,6 +78,79 @@ function renderHead($config, $pageType = 'main') // default เป็น main
     </head>
 
     <body>
+        <!-- Script DataTable -->
+        <script>
+            $(document).ready(function () {
+                new DataTable('#dynamicTable', {
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
+                    },
+                    dom: 'Bfrtip',
+                    buttons: [{
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        },
+                        customize: function (doc) {
+                            // กำหนดฟอนต์ภาษาไทย
+                            doc.defaultStyle = {
+                                font: 'THSarabun',
+                                fontSize: 16
+                            };
+                            // จัดระเบียบตาราง PDF
+                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+                            doc.styles.tableHeader.alignment = 'center';
+                            doc.styles.tableBodyEven.alignment = 'center';
+                            doc.styles.tableBodyOdd.alignment = 'center';
+                            // กำหนด margin
+                            doc.pageMargins = [20, 20, 20, 20];
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':not(:last-child)'
+                        }
+                    }
+                    ],
+                    pageLength: 10,
+                    lengthMenu: [5, 10, 25, 50],
+                    order: [
+                        [0, 'asc']
+                    ]
+                });
+
+                // เพิ่มฟอนต์ภาษาไทยสำหรับ pdfMake
+                if (window.pdfMake) {
+                    if (!pdfMake.fonts) pdfMake.fonts = {};
+                    pdfMake.fonts['THSarabun'] = {
+                        normal: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew-webfont.ttf',
+                        bold: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_bold-webfont.ttf',
+                        italics: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_italic-webfont.ttf',
+                        bolditalics: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_bolditalic-webfont.ttf'
+                    };
+                }
+            });
+        </script>
+
         <!-- sweetalert2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <style>

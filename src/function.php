@@ -74,7 +74,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
     if (empty($cols) && !empty($data)) {
         $cols = array_combine(array_keys($data[0]), array_keys($data[0]));
     }
-?>
+    ?>
     <!-- ปุ่มเพิ่มข้อมูล -->
     <div class="mb-3">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal" onclick="openForm('insert')">
@@ -95,7 +95,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
         <tbody>
             <?php foreach ($data as $dataKey => $row): ?>
                 <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
-                                                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+                      echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
                             <?php if ($key === 'avatar_url'): ?>
@@ -113,7 +113,8 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
                             <? if ($url == 'shop_process.php') { ?>
-                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>" class="btn btn-sm btn-info btn-edit">
+                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
+                                    class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
                                 </a>
                             <? } ?>
@@ -135,15 +136,56 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form method="post" action="<?= $path ?>?act=update">
+
+                                <form method="post" action="<?= $path ?>?act=update" enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
 
-                                    <?php foreach (array_keys($row) as $key): ?>
-                                        <div class="mb-3">
-                                            <label class="form-label"><?= htmlspecialchars($key) ?></label>
-                                            <input type="text" name="<?= $key ?>" value="<?= htmlspecialchars($row[$key]) ?>"
-                                                class="form-control" <?= $key === 'id' ? 'readonly' : '' ?>>
-                                        </div>
+                                    <?php
+                                    $imgData = [];
+                                    foreach (array_keys($row) as $key): ?>
+                                        <?php switch ($key):
+                                            case 'role': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="admin" <?= ($row[$key] ?? '') === 'admin' ? 'selected' : '' ?>>Admin
+                                                        </option>
+                                                        <option value="user" <?= ($row[$key] ?? '') === 'user' ? 'selected' : '' ?>>User
+                                                        </option>
+                                                        <option value="vendor" <?= ($row[$key] ?? '') === 'vendor' ? 'selected' : '' ?>>Vendor
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <?php break;
+                                            case 'login_type': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="normal" <?= ($row[$key] ?? '') === 'normal' ? 'selected' : '' ?>>Normal
+                                                        </option>
+                                                        <option value="line" <?= ($row[$key] ?? '') === 'line' ? 'selected' : '' ?>>Line
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <?php break;
+                                            case 'avatar_url':
+                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'].'_'. $row['name'].'/';
+                                                $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                break;
+                                            case 'id': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
+                                                        readonly>
+                                                </div>
+                                                <?php break;
+                                            default: ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control">
+                                                </div>
+                                        <?php endswitch; ?>
+
                                     <?php endforeach; ?>
 
                                     <div class="modal-footer">
@@ -151,11 +193,13 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                                         <button type="submit" class="btn btn-primary">บันทึก</button>
                                     </div>
                                 </form>
+                                <?php
+                                renderImageUpload($path, $imgData['id'], $imgData['name'], $imgData['currentImage'], $imgData['uploadPath']);
+                                ?>
                             </div>
                         </div>
                     </div>
                 </div>
-
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -164,7 +208,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <form method="post" action="<?= $path ?>?act=insert">
+                <form method="post" action="<?= $path ?>?act=insert" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="dataModalLabel">เพิ่มข้อมูลใหม่</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -195,80 +239,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
             </div>
         </div>
     </div>
-
-    <!-- Script DataTable + Modal -->
-    <script>
-        $(document).ready(function() {
-            new DataTable('#dynamicTable', {
-                language: {
-                    url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/th.json',
-                },
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'copy',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'csv',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        },
-                        customize: function(doc) {
-                            // กำหนดฟอนต์ภาษาไทย
-                            doc.defaultStyle = {
-                                font: 'THSarabun',
-                                fontSize: 16
-                            };
-                            // จัดระเบียบตาราง PDF
-                            doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                            doc.styles.tableHeader.alignment = 'center';
-                            doc.styles.tableBodyEven.alignment = 'center';
-                            doc.styles.tableBodyOdd.alignment = 'center';
-                            // กำหนด margin
-                            doc.pageMargins = [20, 20, 20, 20];
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(:last-child)'
-                        }
-                    }
-                ],
-                pageLength: 10,
-                lengthMenu: [5, 10, 25, 50],
-                order: [
-                    [0, 'asc']
-                ]
-            });
-
-            // เพิ่มฟอนต์ภาษาไทยสำหรับ pdfMake
-            if (window.pdfMake) {
-                if (!pdfMake.fonts) pdfMake.fonts = {};
-                pdfMake.fonts['THSarabun'] = {
-                    normal: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew-webfont.ttf',
-                    bold: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_bold-webfont.ttf',
-                    italics: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_italic-webfont.ttf',
-                    bolditalics: 'https://cdn.jsdelivr.net/npm/font-th-sarabun-new@1.0.0/fonts/THSarabunNew_bolditalic-webfont.ttf'
-                };
-            }
-        });
-    </script>
-<?php
+    <?php
 }
 
 // ฟังก์ชันแบ่ง array เป็นกลุ่มละ $size
@@ -321,7 +292,8 @@ function renderCarousel($id, $productChunks)
 ?>
 
 <?
-function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image') {
+function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image')
+{
     $uploadedPaths = [];
 
     // Ensure the target directory exists
@@ -352,4 +324,31 @@ function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename
 
     return $uploadedPaths;
 }
-?>
+function renderImageUpload($url, $id, $name, $currentImage = '', $uploadPath = '')
+{
+    ?>
+    <div class="mb-3">
+        <label class="form-label"><?= htmlspecialchars($name) ?></label>
+        <form class="imgForm" action="<?= $url ?>?act=upload" method="post" enctype="multipart/form-data">
+            <!-- hidden field เก็บข้อมูล -->
+            <input type="hidden" name="id" value="<?= (int) $id ?>">
+            <input type="hidden" name="field_name" value="<?= htmlspecialchars($name) ?>">
+            <input type="hidden" name="upload_path" value="<?= htmlspecialchars($uploadPath) ?>">
+
+            <!-- input file -->
+            <input type="file" name="upload" class="form-control" accept="image/*">
+
+            <input type="submit" name="save" value="Upload" class="btn btn-primary mt-2">
+        </form>
+
+        <!-- Preview ถ้ามีรูป -->
+        <?php if (!empty($currentImage) && file_exists($uploadPath . '/' . $currentImage)): ?>
+            <div class="mt-2">
+                <img src="<?= htmlspecialchars($uploadPath . '/' . $currentImage) ?>" alt="Preview"
+                    style="max-height: 100px; border:1px solid #ccc; padding:3px;">
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+

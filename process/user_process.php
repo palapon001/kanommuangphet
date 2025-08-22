@@ -11,7 +11,7 @@ echo '</pre>';
 
 
 $act = $_POST['act'] ?? $_GET['act'] ?? '';
-if (!in_array($act, ['insert', 'update', 'delete'])) {
+if (!in_array($act, ['insert', 'update', 'delete', 'upload'])) {
     redirectWithAlert('error', 'การกระทำไม่ถูกต้อง', 'users');
 }
 
@@ -80,4 +80,53 @@ switch ($act) {
             redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบข้อมูล', 'users');
         }
         break;
+    case 'upload':
+        $id = (int) ($_POST['id'] ?? 0);
+        $role = preg_replace('/[^a-z0-9_-]/i', '', $_POST['role'] ?? 'user');
+        $field_name = $_POST['field_name'] ?? 'avatar_url';
+        $uploadPath = $_POST['upload_path'] ?? 'uploads/';
+
+        // ✅ สร้างโฟลเดอร์ถ้าไม่มี
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        if (!empty($_FILES['upload']['name'])) {
+            if ($_FILES['upload']['error'] !== 0) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'เกิดข้อผิดพลาดในการอัปโหลดไฟล์',
+                    'error_code' => $_FILES['upload']['error']
+                ]);
+                exit;
+            }
+
+            $fileTmp = $_FILES['upload']['tmp_name'];
+            $fileName = basename($_FILES['upload']['name']);
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+            if (in_array($fileExt, $allowed)) {
+                $newFileName = $id . '_' . time() . '.' . $fileExt;
+
+                // path เต็มของไฟล์
+                $fullPath = rtrim($uploadPath, '/') . '/' . $newFileName;
+
+                // ✅ แสดง path debug
+                echo json_encode(['status' => 'debug', 'path' => $fullPath]);
+
+                if (move_uploaded_file($fileTmp, $fullPath)) {
+                    echo json_encode(['status' => 'success', 'file' => $newFileName, 'path' => $fullPath]);
+                    redirectWithAlert('success', 'อัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'ไม่สามารถบันทึกไฟล์ได้', 'path' => $fullPath]);
+                }
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'ไฟล์ต้องเป็นรูปภาพเท่านั้น']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'ไม่มีไฟล์ถูกอัปโหลด']);
+        }
+        break;
+
 }
