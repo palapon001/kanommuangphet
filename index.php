@@ -2,7 +2,7 @@
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
 require_once __DIR__ . '/src/connect.php';
-// require_once __DIR__ . '/src/function.php';
+require_once __DIR__ . '/src/function.php';
 $lang = $_GET['lang'] ?? 'th';
 $config = [
     'title' => $modelIndex[$lang]['navbar_brand_text'],
