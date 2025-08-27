@@ -68,7 +68,6 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
 
 function renderTable($data, $cols = null, $url = '', $config = [])
 {
-
     $path = '../process/' . $url;
 
     if (empty($cols) && !empty($data)) {
@@ -301,9 +300,6 @@ function renderCarousel($id, $productChunks)
     </div>
     <?php
 }
-?>
-
-<?
 function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image')
 {
     $uploadedPaths = [];
