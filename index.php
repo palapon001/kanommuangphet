@@ -35,9 +35,6 @@ if (isset($shop)) {
     ];
 }
 
-
-
-
 if ($_GET['debug'] == 'dev' || $_SESSION['user_role'] == 'admin') { ?>
     <div class="mb-3">
         <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#debugInfo"
