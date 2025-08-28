@@ -6,6 +6,7 @@ $config = [
     'title' => 'kanommuangphet',
     'description' => 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม',
     'url' => ($host === 'localhost' ? "{$protocol}://{$host}/kanommuangphet/" : "{$protocol}://{$host}/"),
+    'cacheVersion' => 0.0002
 ];
 
 function getPDOConnection()

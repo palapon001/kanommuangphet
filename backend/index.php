@@ -23,7 +23,7 @@ $currentPage = $page ?: ($_SESSION['page'] ?? 'users');
 $pageFile = "content/{$page}.php";
 $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
-$config['role'] = 'backend';
+$config['role'] = 'backend'; 
 
 renderHead($config); 
 ?>

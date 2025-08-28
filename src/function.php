@@ -66,8 +66,10 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
     exit;
 }
 
-function renderTable($data, $cols = null, $url = '', $config = [])
+function renderTable($data, $cols = null, $url = '')
 {
+
+    global $config;
     $path = '../process/' . $url;
 
     if (empty($cols) && !empty($data)) {
@@ -100,7 +102,7 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                             <?php if ($key === 'avatar_url'): ?>
                                 <?php if (!empty($row[$key])): ?>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]) ?>')">
+                                        data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]).'?v='.$config['cacheVersion'] ?>')">
                                         ดูภาพ
                                     </button>
                                     <!-- Modal -->
