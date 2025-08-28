@@ -26,8 +26,6 @@ $config['description'] = 'ระบบเปรียบเทียบราค
 $config['role'] = 'backend';
 
 renderHead($config); 
-
-
 ?>
 
 <!-- Layout wrapper -->

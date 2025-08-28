@@ -123,12 +123,12 @@ function renderTable($data, $cols = null, $url = '', $config = [])
                     <?php endforeach; ?>
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
-                            <? if ($url == 'shop_process.php') { ?>
+                            <?php if ($url == 'shop_process.php') { ?> 
                                 <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
                                     class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
                                 </a>
-                            <? } ?>
+                            <?php } ?>
                             <button type="button" class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal"
                                 data-bs-target="#modal-<?= $row['id'] ?>">
                                 แก้ไข

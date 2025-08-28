@@ -1,7 +1,7 @@
 <?php
 
 $host = $_SERVER['HTTP_HOST'];
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'http' : 'http';
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $config = [
     'title' => 'kanommuangphet',
     'description' => 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม',
