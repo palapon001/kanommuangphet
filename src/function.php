@@ -96,10 +96,10 @@ function renderTable($data, $cols = null, $url = '')
         <tbody>
             <?php foreach ($data as $dataKey => $row): ?>
                 <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
-                                                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
-                            <?php if ($key === 'avatar_url' || $key === 'profile_image' ): ?>
+                            <?php if ($key === 'avatar_url' || $key === 'profile_image'): ?>
                                 <?php if (!empty($row[$key])): ?>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]) . '?v=' . $config['cacheVersion'] ?>')">
@@ -127,6 +127,7 @@ function renderTable($data, $cols = null, $url = '')
                         <div class="btn-group" style="display:flex;gap:5px;">
                             <?php if ($url == 'shop_process.php') { ?>
                                 <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
+                                    target="_blank"
                                     class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
                                 </a>
@@ -142,7 +143,7 @@ function renderTable($data, $cols = null, $url = '')
 
                 <!-- Modal -->
                 <div class="modal fade" id="modal-<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
+                    <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">แก้ไขข้อมูล <?= $row['name'] ?? $row['id'] ?></h5>
@@ -186,7 +187,7 @@ function renderTable($data, $cols = null, $url = '')
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
                                             case 'profile_image':
-                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
+                                                $uploadDir = '../uploads/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
                                             case 'id': ?>
@@ -229,7 +230,7 @@ function renderTable($data, $cols = null, $url = '')
 
     <!-- Modal เพิ่มข้อมูล -->
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <form method="post" action="<?= $path ?>?act=insert" enctype="multipart/form-data">
                     <div class="modal-header">
@@ -237,45 +238,22 @@ function renderTable($data, $cols = null, $url = '')
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <?php
-                        $imgDataADD = [];
-                         case 'profile_image':
-                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
-                                                $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
-                                                break;
-                        foreach ($cols as $key => $label): ?>
-                            <?php switch ($key): ?>
-                                <?php case 'id': ?>
-                                <?php case 'avatar_url': ?>
-                                    <?php continue 2; ?> <!-- ข้ามไปยัง foreach ถัดไป -->
-
-                                <?php case 'role': ?>
-                                    <div class="mb-3">
-                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
-                                        <select name="<?= $key ?>" class="form-select">
-                                            <option value="admin">Admin</option>
-                                            <option value="user">User</option>
-                                            <option value="vendor">Vendor</option>
-                                        </select>
-                                    </div>
-                                    <?php break; ?>
-
-                                <?php default: ?>
-                                    <div class="mb-3">
-                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
-                                        <input type="text" name="<?= $key ?>" class="form-control">
-                                    </div>
-                            <?php endswitch; ?>
+                        <?php foreach ($cols as $key => $label): ?>
+                            <?php if ($key === 'id' || $key === 'avatar_url')
+                                continue; ?>
+                            <div class="mb-3">
+                                <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                <?php if ($key === 'role'): ?>
+                                    <select name="<?= $key ?>" class="form-select">
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                        <option value="vendor">Vendor</option>
+                                    </select>
+                                <?php else: ?>
+                                    <input type="text" name="<?= $key ?>" class="form-control">
+                                <?php endif; ?>
+                            </div>
                         <?php endforeach; ?>
-                            <?php
-                                renderImageUpload(
-                                    $path,
-                                    $imgData['id'],
-                                    $imgData['name'],
-                                    $imgData['currentImage'],
-                                    $imgData['uploadPath']
-                                );
-                                ?>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">บันทึก</button>
