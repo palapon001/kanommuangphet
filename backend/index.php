@@ -55,7 +55,7 @@ renderHead($config);
         } else {
           if ($page == 'logout') {
             session_destroy();
-            header("Location: ../login.php"); // ออกจากระบบ
+            header("Location: ./login.php"); // ออกจากระบบ
             exit;
           }
           ($page && file_exists($pageFile))
