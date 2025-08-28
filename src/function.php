@@ -75,7 +75,7 @@ function renderTable($data, $cols = null, $url = '')
     if (empty($cols) && !empty($data)) {
         $cols = array_combine(array_keys($data[0]), array_keys($data[0]));
     }
-    ?>
+?>
     <!-- ปุ่มเพิ่มข้อมูล -->
     <div class="mb-3">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal" onclick="openForm('insert')">
@@ -96,13 +96,13 @@ function renderTable($data, $cols = null, $url = '')
         <tbody>
             <?php foreach ($data as $dataKey => $row): ?>
                 <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
-                      echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+                                                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
-                            <?php if ($key === 'avatar_url'): ?>
+                            <?php if ($key === 'avatar_url' || $key === 'profile_image' ): ?>
                                 <?php if (!empty($row[$key])): ?>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]).'?v='.$config['cacheVersion'] ?>')">
+                                        data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]) . '?v=' . $config['cacheVersion'] ?>')">
                                         ดูภาพ
                                     </button>
                                     <!-- Modal -->
@@ -125,7 +125,7 @@ function renderTable($data, $cols = null, $url = '')
                     <?php endforeach; ?>
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
-                            <?php if ($url == 'shop_process.php') { ?> 
+                            <?php if ($url == 'shop_process.php') { ?>
                                 <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
                                     class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
@@ -169,7 +169,7 @@ function renderTable($data, $cols = null, $url = '')
                                                         </option>
                                                     </select>
                                                 </div>
-                                                <?php break;
+                                            <?php break;
                                             case 'login_type': ?>
                                                 <div class="mb-3">
                                                     <label class="form-label"><?= ($key) ?></label>
@@ -180,8 +180,12 @@ function renderTable($data, $cols = null, $url = '')
                                                         </option>
                                                     </select>
                                                 </div>
-                                                <?php break;
+                                            <?php break;
                                             case 'avatar_url':
+                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
+                                                $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                break;
+                                            case 'profile_image':
                                                 $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
@@ -191,7 +195,7 @@ function renderTable($data, $cols = null, $url = '')
                                                     <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
                                                         readonly>
                                                 </div>
-                                                <?php break;
+                                            <?php break;
                                             default: ?>
                                                 <div class="mb-3">
                                                     <label class="form-label"><?= ($key) ?></label>
@@ -207,7 +211,13 @@ function renderTable($data, $cols = null, $url = '')
                                 </form>
                                 <div class="dropdown-divider"></div>
                                 <?php
-                                renderImageUpload($path, $imgData['id'], $imgData['name'], $imgData['currentImage'], $imgData['uploadPath']);
+                                renderImageUpload(
+                                    $path,
+                                    $imgData['id'],
+                                    $imgData['name'],
+                                    $imgData['currentImage'],
+                                    $imgData['uploadPath']
+                                );
                                 ?>
                             </div>
                         </div>
@@ -227,22 +237,45 @@ function renderTable($data, $cols = null, $url = '')
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <?php foreach ($cols as $key => $label): ?>
-                            <?php if ($key === 'id' || $key === 'avatar_url')
-                                continue; ?>
-                            <div class="mb-3">
-                                <label class="form-label"><?= htmlspecialchars($label) ?></label>
-                                <?php if ($key === 'role'): ?>
-                                    <select name="<?= $key ?>" class="form-select">
-                                        <option value="admin">Admin</option>
-                                        <option value="user">User</option>
-                                        <option value="vendor">Vendor</option>
-                                    </select>
-                                <?php else: ?>
-                                    <input type="text" name="<?= $key ?>" class="form-control">
-                                <?php endif; ?>
-                            </div>
+                        <?php
+                        $imgDataADD = [];
+                         case 'profile_image':
+                                                $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
+                                                $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                break;
+                        foreach ($cols as $key => $label): ?>
+                            <?php switch ($key): ?>
+                                <?php case 'id': ?>
+                                <?php case 'avatar_url': ?>
+                                    <?php continue 2; ?> <!-- ข้ามไปยัง foreach ถัดไป -->
+
+                                <?php case 'role': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                        <select name="<?= $key ?>" class="form-select">
+                                            <option value="admin">Admin</option>
+                                            <option value="user">User</option>
+                                            <option value="vendor">Vendor</option>
+                                        </select>
+                                    </div>
+                                    <?php break; ?>
+
+                                <?php default: ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                        <input type="text" name="<?= $key ?>" class="form-control">
+                                    </div>
+                            <?php endswitch; ?>
                         <?php endforeach; ?>
+                            <?php
+                                renderImageUpload(
+                                    $path,
+                                    $imgData['id'],
+                                    $imgData['name'],
+                                    $imgData['currentImage'],
+                                    $imgData['uploadPath']
+                                );
+                                ?>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">บันทึก</button>
@@ -252,7 +285,7 @@ function renderTable($data, $cols = null, $url = '')
             </div>
         </div>
     </div>
-    <?php
+<?php
 }
 
 // ฟังก์ชันแบ่ง array เป็นกลุ่มละ $size
@@ -268,7 +301,7 @@ function chunkArray($array, $size)
 // ฟังก์ชันแสดง carousel
 function renderCarousel($id, $productChunks)
 {
-    ?>
+?>
     <div id="<?= htmlspecialchars($id) ?>" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <?php foreach ($productChunks as $index => $chunk): ?>
@@ -300,7 +333,7 @@ function renderCarousel($id, $productChunks)
             <span class="visually-hidden">ถัดไป</span>
         </button>
     </div>
-    <?php
+<?php
 }
 function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename = 'image')
 {
@@ -336,7 +369,7 @@ function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename
 }
 function renderImageUpload($url, $id, $name, $currentImage = '', $uploadPath = '')
 {
-    ?>
+?>
     <div class="mb-3">
         <label class="form-label"><?= htmlspecialchars($name) ?></label>
         <form class="imgForm" action="<?= $url ?>?act=upload" method="post" enctype="multipart/form-data">
@@ -359,6 +392,5 @@ function renderImageUpload($url, $id, $name, $currentImage = '', $uploadPath = '
             </div>
         <?php endif; ?>
     </div>
-    <?php
+<?php
 }
-
