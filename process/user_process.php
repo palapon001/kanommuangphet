@@ -33,7 +33,13 @@ switch ($act) {
         echo '<pre>';
         print_r($data);
         echo '</pre>';
-        if (dbInsert('users', $data)) {
+
+        // 1) Insert user ลง DB ก่อน (ยังไม่มี avatar_url)
+        $insertId = dbInsert('users', $data);
+
+        if ($insertId) {
+            uploadFileAndUpdate('users', $insertId, 'profile_image', $data); // อัปโหลด profile_image
+            uploadFileAndUpdate('users', $insertId, 'logo', $data);          // อัปโหลด logo ถ้ามี
             redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', 'users');
         } else {
             redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล', 'users');
@@ -117,10 +123,10 @@ switch ($act) {
 
                 if (move_uploaded_file($fileTmp, $fullPath)) {
                     echo json_encode(['status' => 'success', 'file' => $newFileName, 'path' => $fullPath]);
-                    if (dbUpdate('users', ['avatar_url' => $fullPath ] , 'id = :id', ['id' => $id])) {
-                        echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true); 
+                    if (dbUpdate('users', ['avatar_url' => $fullPath], 'id = :id', ['id' => $id])) {
+                        echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true);
                         redirectWithAlert('success', 'อัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
-                    } else { 
+                    } else {
                         redirectWithAlert('error', 'เกิดข้อผิดพลาดอัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
                     }
                 } else {
@@ -133,5 +139,4 @@ switch ($act) {
             echo json_encode(['status' => 'error', 'message' => 'ไม่มีไฟล์ถูกอัปโหลด']);
         }
         break;
-
 }

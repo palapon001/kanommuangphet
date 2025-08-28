@@ -23,10 +23,15 @@ $data = [
 
 switch ($act) {
     case 'insert':
-        if (dbInsert('shops', $data)) {
-            redirectWithAlert('success', 'เพิ่มร้านค้าสำเร็จ', 'shop');
+        // 1) Insert ร้านค้า ลง DB ก่อน
+        $insertId = dbInsert('shops', $data);
+
+        if ($insertId) {
+            uploadFileAndUpdate('shops', $insertId, 'profile_image', $data); // อัปโหลด profile_image
+            uploadFileAndUpdate('shops', $insertId, 'logo', $data);
+            redirectWithAlert('success', 'เพิ่มร้านค้าสำเร็จ', 'shops');
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มร้านค้า', 'shop');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มร้านค้า', 'shops');
         }
         break;
 
@@ -34,33 +39,33 @@ switch ($act) {
         $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
-            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'shop');
+            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'shops');
         }
 
         if ($data['name'] === '') {
-            redirectWithAlert('warning', 'กรุณากรอกชื่อร้าน', 'shop');
+            redirectWithAlert('warning', 'กรุณากรอกชื่อร้าน', 'shops');
         }
 
         if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', 'shop');
+            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', 'shops');
         }
 
         if (dbUpdate('shops', $data, 'id = :id', ['id' => $id])) {
-            redirectWithAlert('success', 'แก้ไขข้อมูลร้านค้าสำเร็จ', 'shop');
+            redirectWithAlert('success', 'แก้ไขข้อมูลร้านค้าสำเร็จ', 'shops');
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', 'shop');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', 'shops');
         }
         break;
 
     case 'delete':
         $id = (int) ($_GET['id'] ?? 0);
         if ($id <= 0) {
-            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'shop');
+            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'shops');
         }
         if (dbDelete('shops', 'id = :id', ['id' => $id])) {
-            redirectWithAlert('success', 'ลบร้านค้าสำเร็จ', 'shop');
+            redirectWithAlert('success', 'ลบร้านค้าสำเร็จ', 'shops');
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบร้านค้า', 'shop');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบร้านค้า', 'shops');
         }
         break;
 
@@ -97,9 +102,9 @@ switch ($act) {
 
                 if (move_uploaded_file($fileTmp, $fullPath)) {
                     if (dbUpdate('shops', [$field_name => $fullPath], 'id = :id', ['id' => $id])) {
-                        redirectWithAlert('success', 'อัพเดทรูปโปรไฟล์ร้านค้าสำเร็จ', 'shop');
+                        redirectWithAlert('success', 'อัพเดทรูปโปรไฟล์ร้านค้าสำเร็จ', 'shops');
                     } else {
-                        redirectWithAlert('error', 'เกิดข้อผิดพลาดในการอัพเดทรูปร้านค้า', 'shop');
+                        redirectWithAlert('error', 'เกิดข้อผิดพลาดในการอัพเดทรูปร้านค้า', 'shops');
                     }
                 } else {
                     echo json_encode(['status' => 'error', 'message' => 'ไม่สามารถบันทึกไฟล์ได้']);

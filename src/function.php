@@ -17,7 +17,12 @@ function dbInsert($table, $data)
     $columns = implode(", ", array_keys($data));
     $placeholders = ":" . implode(", :", array_keys($data));
     $stmt = $pdo->prepare("INSERT INTO $table ($columns) VALUES ($placeholders)");
-    return $stmt->execute($data);
+
+    if ($stmt->execute($data)) {
+        return $pdo->lastInsertId(); // คืนค่า ID ของ row ที่เพิ่ง insert
+    } else {
+        return false; // insert ไม่สำเร็จ
+    }
 }
 
 // Read (WHERE + optional LIMIT)
@@ -96,7 +101,7 @@ function renderTable($data, $cols = null, $url = '')
         <tbody>
             <?php foreach ($data as $dataKey => $row): ?>
                 <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
-                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+                                                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
                             <?php if ($key === 'avatar_url' || $key === 'profile_image'): ?>
@@ -126,7 +131,7 @@ function renderTable($data, $cols = null, $url = '')
                     <td id="colEdit">
                         <div class="btn-group" style="display:flex;gap:5px;">
                             <?php if ($url == 'shop_process.php') { ?>
-                                <a href="<?= $config['url'] ?>/index.php?shop=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
+                                <a href="<?= $config['url'] ?>/index.php?shops=<?= str_pad($row['id'], 4, '0', STR_PAD_LEFT) ?>"
                                     target="_blank"
                                     class="btn btn-sm btn-info btn-edit">
                                     ตัวอย่างหน้าเว็บ
@@ -187,7 +192,7 @@ function renderTable($data, $cols = null, $url = '')
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
                                             case 'profile_image':
-                                                $uploadDir = '../uploads/' . $row['id'] . '_' . $row['name'] . '/';
+                                                $uploadDir = '../uploads/shops/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
                                             case 'id': ?>
@@ -239,20 +244,37 @@ function renderTable($data, $cols = null, $url = '')
                     </div>
                     <div class="modal-body">
                         <?php foreach ($cols as $key => $label): ?>
-                            <?php if ($key === 'id' || $key === 'avatar_url')
-                                continue; ?>
-                            <div class="mb-3">
-                                <label class="form-label"><?= htmlspecialchars($label) ?></label>
-                                <?php if ($key === 'role'): ?>
-                                    <select name="<?= $key ?>" class="form-select">
-                                        <option value="admin">Admin</option>
-                                        <option value="user">User</option>
-                                        <option value="vendor">Vendor</option>
-                                    </select>
-                                <?php else: ?>
-                                    <input type="text" name="<?= $key ?>" class="form-control">
-                                <?php endif; ?>
-                            </div>
+                            <?php switch ($key):
+                                case 'id': ?>
+                                    <?php break; ?> <!-- ไม่ต้องแสดง ID -->
+
+                                <?php
+                                case 'role': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                        <select name="<?= $key ?>" class="form-select">
+                                            <option value="admin">Admin</option>
+                                            <option value="user">User</option>
+                                            <option value="vendor">Vendor</option>
+                                        </select>
+                                    </div>
+                                    <?php break; ?>
+
+                                <?php
+                                case 'avatar_url': 
+                                case 'profile_image': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                        <input type="file" name="<?= $key ?>" class="form-control" accept="image/*">
+                                    </div>
+                                    <?php break; ?>
+                                <?php
+                                default: ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?></label>
+                                        <input type="text" name="<?= $key ?>" class="form-control">
+                                    </div>
+                            <?php endswitch; ?>
                         <?php endforeach; ?>
                     </div>
                     <div class="modal-footer">
@@ -260,6 +282,7 @@ function renderTable($data, $cols = null, $url = '')
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -371,4 +394,33 @@ function renderImageUpload($url, $id, $name, $currentImage = '', $uploadPath = '
         <?php endif; ?>
     </div>
 <?php
+}
+
+function uploadFileAndUpdate($table, $id, $field_name, $data, $uploadBasePath = '../uploads/')
+{
+    if (!empty($_FILES[$field_name]['name'])) {
+        $safeName = preg_replace('/[^a-zA-Z0-9_-]/', '', $data['name']);
+        $uploadPath = rtrim($uploadBasePath, '/') . '/' . $id . '_' . $safeName . '/';
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        $fileTmp  = $_FILES[$field_name]['tmp_name'];
+        $fileName = basename($_FILES[$field_name]['name']);
+        $fileExt  = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $allowed  = ['jpg','jpeg','png','gif'];
+
+        if (!in_array($fileExt, $allowed)) {
+            redirectWithAlert('error', "ไฟล์ $field_name ต้องเป็นรูปภาพเท่านั้น", $table);
+        }
+
+        $newFileName = $id . '_' . $safeName . '.' . $fileExt;
+        $fullPath = $uploadPath . $newFileName;
+
+        if (move_uploaded_file($fileTmp, $fullPath)) {
+            dbUpdate($table, [$field_name => $fullPath], 'id = :id', ['id' => $id]);
+        } else {
+            redirectWithAlert('error', "อัปโหลดไฟล์ $field_name ไม่สำเร็จ", $table);
+        }
+    }
 }

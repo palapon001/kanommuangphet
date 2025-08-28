@@ -11,14 +11,14 @@ $config = [
 renderHead($config, 'auth');
 include 'src/model.php';
 
-$shop = ltrim($_GET['shop'], '0');
-if (isset($shop)) {
+$shops = ltrim($_GET['shops'], '0');
+if (isset($shops)) {
     // ดึงข้อมูลจากฐานข้อมูล
     $model = [
         'shops' => dbSelect(
             'shops',
             'id LIKE :q1',
-            [':q1' => "%$shop%"],
+            [':q1' => "%$shops%"],
         ),
         // 'products' => dbSelect('products'),
         // 'ingredients' => dbSelect('ingredients'),
