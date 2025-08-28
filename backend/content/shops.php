@@ -18,8 +18,8 @@ $cols = [
     'description' => 'รายละเอียด',
     'bank_account_name' => 'ชื่อบัญชีธนาคาร',
     'bank_account_number' => 'เลขที่บัญชี',
-    'bank_key' => 'รหัสธนาคาร',
-    'created_at' => 'วันที่สร้าง'
+    'bank_key' => 'ชื่อธนาคาร',
+    // 'created_at' => 'วันที่สร้าง'
 ];
 ?>
 <div class="container-xxl flex-grow-1 container-p-y">

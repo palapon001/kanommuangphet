@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 require_once __DIR__ . $baseDir . 'src/header_footer.php';
 require_once __DIR__ . $baseDir . 'src/connect.php';
 require_once __DIR__ . $baseDir . 'src/function.php';
-
+require_once __DIR__ . $baseDir . 'src/banks.php';
 // กรองค่า page เพื่อความปลอดภัย
 $search = isset($_GET['q']) ? trim($_GET['q']) : '';
 $page = isset($_GET['page']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['page']) : '';
@@ -47,6 +47,7 @@ renderHead($config);
           'shops' => dbSelect('shops'),
           'products' => dbSelect('products'),
           'ingredients' => dbSelect('ingredients'),
+          'banks' => $banks ?? []
         ];
 
         if (!empty($search)) {

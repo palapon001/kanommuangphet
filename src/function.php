@@ -74,7 +74,7 @@ function redirectWithAlert($alert = 'info', $text = '', $page = 'dashboard')
 function renderTable($data, $cols = null, $url = '')
 {
 
-    global $config;
+    global $config, $model;
     $path = '../process/' . $url;
 
     if (empty($cols) && !empty($data)) {
@@ -100,11 +100,12 @@ function renderTable($data, $cols = null, $url = '')
         </thead>
         <tbody>
             <?php foreach ($data as $dataKey => $row): ?>
-                <tr data-id="<?= $row['id'] ?>" <?php foreach ($cols as $key => $label)
-                                                    echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
+                <tr data-id="<?= $row['id'] ?>"
+                    <?php foreach ($cols as $key => $label)
+                        echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
-                            <?php if ($key === 'avatar_url' || $key === 'profile_image'): ?>
+                            <?php if ($key === 'avatar_url' || $key === 'profile_image' ||  $key === 'products_image'): ?>
                                 <?php if (!empty($row[$key])): ?>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]) . '?v=' . $config['cacheVersion'] ?>')">
@@ -176,6 +177,32 @@ function renderTable($data, $cols = null, $url = '')
                                                     </select>
                                                 </div>
                                             <?php break;
+
+                                            case 'owner_id': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($label) ?>
+                                                    </label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="<?= ($row[$key]) == '0' ? '0' : $row[$key] ?>" <?= ($row[$key]) == '0' ? 'disabled selected' : '' ?>>รายชื่อผู้ใช้</option>
+                                                        <?php foreach ($model['users'] as $value) { ?>
+                                                            <option value="<?= $value['id'] ?>" <?= ($row[$key]) == $value['id'] ? 'selected' : '' ?>><?= $value['id'] . ' : ' . $value['name'] ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            <?php break;
+                                            case 'bank_key': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($label) ?>
+                                                    </label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="<?= ($row[$key]) == '0' ? '0' : $row[$key] ?>" <?= ($row[$key]) == '0' ? 'disabled selected' : '' ?>>รายชื่อบัญชีธนาคาร</option>
+                                                        <?php foreach ($model['banks'] as $k =>  $value) { ?>
+                                                            <option value="<?= $k  ?>" <?= ($row[$key]) == $k ? 'selected' : '' ?>><?= $value['name'] ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            <?php break;
+
                                             case 'login_type': ?>
                                                 <div class="mb-3">
                                                     <label class="form-label"><?= ($key) ?></label>
@@ -187,21 +214,31 @@ function renderTable($data, $cols = null, $url = '')
                                                     </select>
                                                 </div>
                                             <?php break;
+
                                             case 'avatar_url':
                                                 $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
+
                                             case 'profile_image':
                                                 $uploadDir = '../uploads/shops/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
-                                            case 'id': ?>
+                                            case 'products_image':
+                                                $uploadDir = '../uploads/products/' . $row['id'] . '_' . $row['shop_id'] . '_' . $row['name'] . '/';
+                                                $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                break;
+
+                                            case 'id':
+                                            case 'created_at':
+                                            ?>
                                                 <div class="mb-3">
                                                     <label class="form-label"><?= ($key) ?></label>
                                                     <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
                                                         readonly>
                                                 </div>
                                             <?php break;
+
                                             default: ?>
                                                 <div class="mb-3">
                                                     <label class="form-label"><?= ($key) ?></label>
@@ -259,10 +296,35 @@ function renderTable($data, $cols = null, $url = '')
                                         </select>
                                     </div>
                                     <?php break; ?>
-
                                 <?php
-                                case 'avatar_url': 
-                                case 'profile_image': ?>
+                                case 'owner_id': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?>
+                                        </label>
+                                        <select name="<?= $key ?>" class="form-select">
+                                            <?php foreach ($model['users'] as $value) { ?>
+                                                <option value="<?= $value['id'] ?>"><?= $value['id'] . ' : ' . $value['name'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <?php break; ?>
+                                <?php
+                                case 'bank_key': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?>
+                                        </label>
+                                        <select name="<?= $key ?>" class="form-select">
+                                            <?php foreach ($model['banks'] as $k => $value) { ?>
+                                                <option value="<?= $k ?>"><?= $k .' : '.$value['fullname'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <?php break; ?>
+                                <?php
+                                case 'avatar_url':
+                                case 'profile_image':
+                                case 'products_image':
+                                ?>
                                     <div class="mb-3">
                                         <label class="form-label"><?= htmlspecialchars($label) ?></label>
                                         <input type="file" name="<?= $key ?>" class="form-control" accept="image/*">
@@ -408,7 +470,7 @@ function uploadFileAndUpdate($table, $id, $field_name, $data, $uploadBasePath = 
         $fileTmp  = $_FILES[$field_name]['tmp_name'];
         $fileName = basename($_FILES[$field_name]['name']);
         $fileExt  = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $allowed  = ['jpg','jpeg','png','gif'];
+        $allowed  = ['jpg', 'jpeg', 'png', 'gif'];
 
         if (!in_array($fileExt, $allowed)) {
             redirectWithAlert('error', "ไฟล์ $field_name ต้องเป็นรูปภาพเท่านั้น", $table);
