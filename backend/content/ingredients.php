@@ -6,6 +6,15 @@ if ($_GET['debug'] == 'dev') {
     echo '</pre>';
 }
 
+$cols = [
+    'id'             => 'ID', 
+    'shop_id'        => 'รหัสร้านค้า',   
+    // 'name'           => 'ชื่อสินค้า',   
+    // // 'description'    => 'รายละเอียด',   
+    // // 'price'          => 'ราคา',   
+    'products_image' => 'รูปสินค้า',   
+    // 'created_at'     => 'วันที่สร้าง'
+];
 
 ?>
 

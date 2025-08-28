@@ -38,8 +38,7 @@ switch ($act) {
         $insertId = dbInsert('users', $data);
 
         if ($insertId) {
-            uploadFileAndUpdate('users', $insertId, 'profile_image', $data); // อัปโหลด profile_image
-            uploadFileAndUpdate('users', $insertId, 'logo', $data);          // อัปโหลด logo ถ้ามี
+            uploadFileAndUpdate('users', $insertId, 'avatar_url', $data);    
             redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', 'users');
         } else {
             redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล', 'users');

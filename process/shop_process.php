@@ -27,8 +27,7 @@ switch ($act) {
         $insertId = dbInsert('shops', $data);
 
         if ($insertId) {
-            uploadFileAndUpdate('shops', $insertId, 'profile_image', $data); // อัปโหลด profile_image
-            uploadFileAndUpdate('shops', $insertId, 'logo', $data);
+            uploadFileAndUpdate('shops', $insertId, 'profile_image', $data); 
             redirectWithAlert('success', 'เพิ่มร้านค้าสำเร็จ', 'shops');
         } else {
             redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มร้านค้า', 'shops');

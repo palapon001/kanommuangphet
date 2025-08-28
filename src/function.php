@@ -105,7 +105,7 @@ function renderTable($data, $cols = null, $url = '')
                         echo "data-$key='" . htmlspecialchars($row[$key]) . "' "; ?>>
                     <?php foreach ($cols as $key => $label): ?>
                         <td>
-                            <?php if ($key === 'avatar_url' || $key === 'profile_image' ||  $key === 'products_image'): ?>
+                            <?php if ($key === 'avatar_url' || $key === 'profile_image' ||  $key === 'products_image' ||  $key === 'ingredients_image'): ?>
                                 <?php if (!empty($row[$key])): ?>
                                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#avatarModal" onclick="setModalImage('<?= htmlspecialchars($row[$key]) . '?v=' . $config['cacheVersion'] ?>')">
@@ -178,6 +178,35 @@ function renderTable($data, $cols = null, $url = '')
                                                 </div>
                                             <?php break;
 
+                                            case 'unit': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <option value="g" <?= ($row[$key] ?? '') === 'g' ? 'selected' : '' ?>>กรัม (g)</option>
+                                                        <option value="kg" <?= ($row[$key] ?? '') === 'kg' ? 'selected' : '' ?>>กิโลกรัม (kg)</option>
+                                                        <option value="ml" <?= ($row[$key] ?? '') === 'ml' ? 'selected' : '' ?>>มิลลิลิตร (ml)</option>
+                                                        <option value="l" <?= ($row[$key] ?? '') === 'l' ? 'selected' : '' ?>>ลิตร (L)</option>
+                                                        <option value="tsp" <?= ($row[$key] ?? '') === 'tsp' ? 'selected' : '' ?>>ช้อนชา (tsp)</option>
+                                                        <option value="tbsp" <?= ($row[$key] ?? '') === 'tbsp' ? 'selected' : '' ?>>ช้อนโต๊ะ (tbsp)</option>
+                                                        <option value="cup" <?= ($row[$key] ?? '') === 'cup' ? 'selected' : '' ?>>ถ้วย (cup)</option>
+                                                        <option value="piece" <?= ($row[$key] ?? '') === 'piece' ? 'selected' : '' ?>>ชิ้น (piece)</option>
+                                                        <option value="egg" <?= ($row[$key] ?? '') === 'egg' ? 'selected' : '' ?>>ฟอง</option>
+                                                        <option value="leaf" <?= ($row[$key] ?? '') === 'leaf' ? 'selected' : '' ?>>ใบ</option>
+                                                        <option value="flower" <?= ($row[$key] ?? '') === 'flower' ? 'selected' : '' ?>>ดอก</option>
+                                                        <option value="clove" <?= ($row[$key] ?? '') === 'clove' ? 'selected' : '' ?>>กลีบ</option>
+                                                        <option value="head" <?= ($row[$key] ?? '') === 'head' ? 'selected' : '' ?>>หัว</option>
+                                                        <option value="cube" <?= ($row[$key] ?? '') === 'cube' ? 'selected' : '' ?>>ก้อน</option>
+                                                        <option value="seed" <?= ($row[$key] ?? '') === 'seed' ? 'selected' : '' ?>>เม็ด</option>
+                                                        <option value="rhizome" <?= ($row[$key] ?? '') === 'rhizome' ? 'selected' : '' ?>>แง่ง</option>
+                                                        <option value="pod" <?= ($row[$key] ?? '') === 'pod' ? 'selected' : '' ?>>ฝัก</option>
+                                                        <option value="string" <?= ($row[$key] ?? '') === 'string' ? 'selected' : '' ?>>เส้น</option>
+                                                        <option value="stem" <?= ($row[$key] ?? '') === 'stem' ? 'selected' : '' ?>>ลำ</option>
+                                                        <option value="slice" <?= ($row[$key] ?? '') === 'slice' ? 'selected' : '' ?>>ชิ้น/แผ่น</option>
+                                                        <option value="fruit" <?= ($row[$key] ?? '') === 'fruit' ? 'selected' : '' ?>>ลูก/ผล</option>
+                                                    </select>
+                                                </div>
+                                            <?php break;
+
                                             case 'owner_id': ?>
                                                 <div class="mb-3">
                                                     <label class="form-label"><?= htmlspecialchars($label) ?>
@@ -197,7 +226,9 @@ function renderTable($data, $cols = null, $url = '')
                                                     <select name="<?= $key ?>" class="form-select">
                                                         <option value="<?= ($row[$key]) == '0' ? '0' : $row[$key] ?>" <?= ($row[$key]) == '0' ? 'disabled selected' : '' ?>>รายชื่อบัญชีธนาคาร</option>
                                                         <?php foreach ($model['banks'] as $k =>  $value) { ?>
-                                                            <option value="<?= $k  ?>" <?= ($row[$key]) == $k ? 'selected' : '' ?>><?= $value['name'] ?></option>
+                                                            <option value="<?= $k  ?>" <?= ($row[$key]) == $k ? 'selected' : '' ?>>
+                                                                <?= $k . ' : ' . $value['fullname'] ?>
+                                                            </option>
                                                         <?php } ?>
                                                     </select>
                                                 </div>
@@ -215,6 +246,30 @@ function renderTable($data, $cols = null, $url = '')
                                                 </div>
                                             <?php break;
 
+                                            case 'shop_id': ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= htmlspecialchars($label) ?>
+                                                    </label>
+                                                    <select name="<?= $key ?>" class="form-select">
+                                                        <?php foreach ($model['shops'] as $k => $value) { ?>
+                                                            <option value="<?= $value['id'] ?>" <?= ($row[$key]) == $value['id'] ? 'selected' : '' ?>>
+                                                                <?= $value['id'] . ' : ' . $value['name'] ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            <?php break;
+
+                                            case 'id':
+                                            case 'created_at':
+                                            ?>
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
+                                                        readonly>
+                                                </div>
+                                            <?php break;
+
                                             case 'avatar_url':
                                                 $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
@@ -229,15 +284,10 @@ function renderTable($data, $cols = null, $url = '')
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
                                                 break;
 
-                                            case 'id':
-                                            case 'created_at':
-                                            ?>
-                                                <div class="mb-3">
-                                                    <label class="form-label"><?= ($key) ?></label>
-                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
-                                                        readonly>
-                                                </div>
-                                            <?php break;
+                                            case 'ingredients_image':
+                                                $uploadDir = '../uploads/ingredients/' . $row['id'] . '_' . $row['shop_id'] . '_' . $row['name'] . '/';
+                                                $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                break;
 
                                             default: ?>
                                                 <div class="mb-3">
@@ -282,7 +332,8 @@ function renderTable($data, $cols = null, $url = '')
                     <div class="modal-body">
                         <?php foreach ($cols as $key => $label): ?>
                             <?php switch ($key):
-                                case 'id': ?>
+                                case 'id':  
+                                case 'created_at': ?>
                                     <?php break; ?> <!-- ไม่ต้องแสดง ID -->
 
                                 <?php
@@ -315,15 +366,56 @@ function renderTable($data, $cols = null, $url = '')
                                         </label>
                                         <select name="<?= $key ?>" class="form-select">
                                             <?php foreach ($model['banks'] as $k => $value) { ?>
-                                                <option value="<?= $k ?>"><?= $k .' : '.$value['fullname'] ?></option>
+                                                <option value="<?= $k ?>"><?= $k . ' : ' . $value['fullname'] ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <?php break; ?>
                                 <?php
+                                case 'shop_id': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= htmlspecialchars($label) ?>
+                                        </label>
+                                        <select name="<?= $key ?>" class="form-select">
+                                            <?php foreach ($model['shops'] as $k => $value) { ?>
+                                                <option value="<?= $value['id'] ?>"><?= $value['id'] . ' : ' . $value['name'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                <?php break;
+                                
+                                case 'unit': ?>
+                                    <div class="mb-3">
+                                        <label class="form-label"><?= ($key) ?></label>
+                                        <select name="<?= $key ?>" class="form-select">
+                                            <option value="g" <?= ($row[$key] ?? '') === 'g' ? 'selected' : '' ?>>กรัม (g)</option>
+                                            <option value="kg" <?= ($row[$key] ?? '') === 'kg' ? 'selected' : '' ?>>กิโลกรัม (kg)</option>
+                                            <option value="ml" <?= ($row[$key] ?? '') === 'ml' ? 'selected' : '' ?>>มิลลิลิตร (ml)</option>
+                                            <option value="l" <?= ($row[$key] ?? '') === 'l' ? 'selected' : '' ?>>ลิตร (L)</option>
+                                            <option value="tsp" <?= ($row[$key] ?? '') === 'tsp' ? 'selected' : '' ?>>ช้อนชา (tsp)</option>
+                                            <option value="tbsp" <?= ($row[$key] ?? '') === 'tbsp' ? 'selected' : '' ?>>ช้อนโต๊ะ (tbsp)</option>
+                                            <option value="cup" <?= ($row[$key] ?? '') === 'cup' ? 'selected' : '' ?>>ถ้วย (cup)</option>
+                                            <option value="piece" <?= ($row[$key] ?? '') === 'piece' ? 'selected' : '' ?>>ชิ้น (piece)</option>
+                                            <option value="egg" <?= ($row[$key] ?? '') === 'egg' ? 'selected' : '' ?>>ฟอง</option>
+                                            <option value="leaf" <?= ($row[$key] ?? '') === 'leaf' ? 'selected' : '' ?>>ใบ</option>
+                                            <option value="flower" <?= ($row[$key] ?? '') === 'flower' ? 'selected' : '' ?>>ดอก</option>
+                                            <option value="clove" <?= ($row[$key] ?? '') === 'clove' ? 'selected' : '' ?>>กลีบ</option>
+                                            <option value="head" <?= ($row[$key] ?? '') === 'head' ? 'selected' : '' ?>>หัว</option>
+                                            <option value="cube" <?= ($row[$key] ?? '') === 'cube' ? 'selected' : '' ?>>ก้อน</option>
+                                            <option value="seed" <?= ($row[$key] ?? '') === 'seed' ? 'selected' : '' ?>>เม็ด</option>
+                                            <option value="rhizome" <?= ($row[$key] ?? '') === 'rhizome' ? 'selected' : '' ?>>แง่ง</option>
+                                            <option value="pod" <?= ($row[$key] ?? '') === 'pod' ? 'selected' : '' ?>>ฝัก</option>
+                                            <option value="string" <?= ($row[$key] ?? '') === 'string' ? 'selected' : '' ?>>เส้น</option>
+                                            <option value="stem" <?= ($row[$key] ?? '') === 'stem' ? 'selected' : '' ?>>ลำ</option>
+                                            <option value="slice" <?= ($row[$key] ?? '') === 'slice' ? 'selected' : '' ?>>ชิ้น/แผ่น</option>
+                                            <option value="fruit" <?= ($row[$key] ?? '') === 'fruit' ? 'selected' : '' ?>>ลูก/ผล</option>
+                                        </select>
+                                    </div>
+                                <?php break;
                                 case 'avatar_url':
                                 case 'profile_image':
                                 case 'products_image':
+                                case 'ingredients_image':
                                 ?>
                                     <div class="mb-3">
                                         <label class="form-label"><?= htmlspecialchars($label) ?></label>
