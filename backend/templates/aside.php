@@ -31,25 +31,25 @@
             </a>
         </li>
 
-        <li class="menu-item <?= ($page == '' || $page == 'myItem') ? 'active' : '' ?>">
+        <li class="menu-item <?= ( $page == 'myItem') ? 'active' : '' ?>">
             <a href="?page=myItem"
-                class="menu-link <?= ($page == '' || $page == 'myItem') ? 'active' : '' ?>">
+                class="menu-link <?= ( $page == 'myItem') ? 'active' : '' ?>">
                 <i class="menu-icon tf-icons bx bx-box"></i>
                 <div>ข้อมูลวัตถุดิบ</div>
             </a>
         </li>
 
-        <li class="menu-item <?= ($page == '' || $page == 'pinItem') ? 'active' : '' ?>">
+        <li class="menu-item <?= ( $page == 'pinItem') ? 'active' : '' ?>">
             <a href="?page=pinItem"
-                class="menu-link <?= ($page == '' || $page == 'pinItem') ? 'active' : '' ?>">
+                class="menu-link <?= ( $page == 'pinItem') ? 'active' : '' ?>">
                 <i class="menu-icon tf-icons bx bx-calendar-check"></i>
                 <div>รายการจองวัตถุดิบ</div>
             </a>
         </li>
 
-        <li class="menu-item <?= ($page == '' || $page == 'profile') ? 'active' : '' ?>">
+        <li class="menu-item <?= ( $page == 'profile') ? 'active' : '' ?>">
             <a href="?page=profile"
-                class="menu-link <?= ($page == '' || $page == 'profile') ? 'active' : '' ?>">
+                class="menu-link <?= ( $page == 'profile') ? 'active' : '' ?>">
                 <i class="menu-icon tf-icons bx bx-user-circle"></i>
                 <div>โปรไฟล์</div>
             </a>

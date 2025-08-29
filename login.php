@@ -1,20 +1,21 @@
 <?php
 // กำหนดค่าเริ่มต้นสำหรับการแสดงผล
 require_once __DIR__ . '/src/header_footer.php';
+require_once __DIR__ . '/src/linelogin.php';
 $config['title'] = 'kanommuangphet';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม';
 renderHead($config, 'auth');
 ?>
 
 <!-- Content -->
-<button type="button" class="btn btn-<?= $_GET['debug'] == 'dev' ? 'light' : 'secondary'; ?>  position-absolute" style="left: 20px; top: 20px; z-index: 10; font-family: 'Kanit';"
-  onclick="window.history.back();">
+<button type="button" class="btn btn-<?= $_GET['debug'] == 'dev' ? 'light' : 'secondary'; ?>  position-absolute"
+  style="left: 20px; top: 20px; z-index: 10; font-family: 'Kanit';" onclick="window.history.back();">
   กลับไปก่อนหน้า
 </button>
 <div class="container-xxl">
   <div class="authentication-wrapper authentication-basic container-p-y">
     <div class="authentication-inner">
-      <?php if ($_GET['debug'] == 'dev') : ?>
+      <?php if ($_GET['debug'] == 'dev'): ?>
         <style>
           body {
             background: #252525 !important;
@@ -31,9 +32,9 @@ renderHead($config, 'auth');
         <div class="card-body">
           <!-- Logo -->
           <div class="app-brand justify-content-center">
-            <a href="index.html" class="app-brand-link gap-2">
+            <a href="index.php" class="app-brand-link gap-2">
               <span class="app-brand-logo demo">
-                <img src="https://placehold.co/100x40?text=Logo" alt="logo login">
+                <img src="https://www.nia.or.th/frontend/home-page-logo/RLRpB5Q37DPy7.svg" alt="logo login">
               </span>
             </a>
           </div>
@@ -65,12 +66,20 @@ renderHead($config, 'auth');
               <span class="fw-bold">ลงทะเบียน</span>
             </a>
           </div>
+          <hr class="my-3" />
+
+          <?php
+          $line = new LineLogin();
+          $link = $line->getLink();
+          ?>
+          <a href="<?php echo $link; ?>" class="btn btn-success d-grid w-100" type="submit">
+            <i class="fab fa-line me-2"></i> เข้าสู่ระบบด้วย LINE
+          </a>
+          <!-- /Register -->
         </div>
-        <!-- /Register -->
       </div>
     </div>
   </div>
-</div>
-<!-- / Content -->
+  <!-- / Content -->
 
-<?php renderFooter($config); ?>
+  <?php renderFooter($config); ?>
