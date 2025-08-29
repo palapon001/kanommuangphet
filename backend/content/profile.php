@@ -1,5 +1,4 @@
 <?php
-$profile = $model['profile'][0];
 // สร้าง array ของฟิลด์ที่ต้องการแสดงใน form
 $fields = [
     ['label' => 'ID', 'name' => 'id', 'type' => 'hidden'],

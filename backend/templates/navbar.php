@@ -1,11 +1,3 @@
-<?php
-$profile = [
-    'name' => 'admin',
-    'role' => 'admin',
-    'imagePath' => 'uploads/profile/default.png'
-];
-?>
-
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -32,7 +24,7 @@ $profile = [
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="<?= $config['url'] . $profile['imagePath'] ?>" alt="profile"
+                        <img src="<?= $config['url'] . $profile['avatar_url'] ?>" alt="profile"
                             class="w-px-40 h-auto rounded-circle"
                             onerror="this.onerror=null; this.src='https://placehold.co/40?text=Profile';" />
                     </div>
@@ -43,7 +35,7 @@ $profile = [
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
-                                        <img src="<?= $config['url'] . $profile['imagePath'] ?>" alt="profile"
+                                        <img src="<?= $config['url'] . $profile['avatar_url'] ?>" alt="profile"
                                             class="w-px-40 h-auto rounded-circle"
                                             onerror="this.onerror=null; this.src='https://placehold.co/40?text=Profile';" />
                                     </div>
