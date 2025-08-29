@@ -105,8 +105,18 @@ $productChunksSale = chunkArray($productsSale, 5);
 
         <!-- Top Row: Logo + Search + Login + Language -->
         <div class="d-flex align-items-center justify-content-between w-100 mb-2">
-            <a class="navbar-brand fw-bold fs-4" href="#"><?= $modelIndex[$lang]['navbar_brand_text'] ?></a>
 
+            <div class="d-flex align-items-center">
+                <!-- โลโก้ -->
+                <img src="https://www.nia.or.th/frontend/home-page-logo/RLRpB5Q37DPy7.svg" alt="Logo"
+                    style="max-width: 130px;">
+
+                <!-- ชื่อเว็บไซต์ -->
+                <a class="navbar-brand fw-bold fs-4 ms-3 ps-3 border-start border-4 border-secondary" href="#"
+                    style=" border-left: 5px solid #d9dee3 !important;">
+                    <?= $modelIndex[$lang]['navbar_brand_text'] ?>
+                </a>
+            </div>
             <form class="d-flex flex-grow-1 mx-3" role="search" style="max-width: 400px;">
                 <input class="form-control me-2" type="search"
                     placeholder="<?= $modelIndex[$lang]['search_placeholder_text'] ?>" aria-label="Search">
@@ -115,7 +125,7 @@ $productChunksSale = chunkArray($productsSale, 5);
 
             <div class="d-flex align-items-center">
                 <?php if (isset($_SESSION['user_name'])) { ?>
-                    <a href="#" id="loginButton"
+                    <a href="<?= $config['url'] ?>/backend/index.php?page=profile" id="loginButton"
                         class="btn btn-outline-primary me-3"><?= htmlspecialchars($_SESSION['user_name']); ?></a>
                     <button type="button" id="logoutButton"
                         class="btn btn-outline-danger me-3"><?= $modelIndex[$lang]['logout_button'] ?? 'Logout' ?></button>

@@ -18,50 +18,77 @@
             <a href="<?= $config['url'] ?>" target="_blank" class="menu-link"
                 onclick="return confirm('หน้าหลัก fontend');">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Dashboard">หน้าบ้าน</div>
+                <div>หน้าหลัก</div>
             </a>
         </li>
 
         <!-- Dashboard -->
         <li class="menu-item <?= ($page == '' || $page == 'dashboard') ? 'active' : '' ?>">
-            <a href="<?= $config['url'] . $config['role'] ?>"
+            <a href="?page=dashboard"
                 class="menu-link <?= ($page == '' || $page == 'dashboard') ? 'active' : '' ?>">
-                 <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-                <div data-i18n="Dashboard">แดชบอร์ด</div>
+                <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                <div>แดชบอร์ดตลาดกลางวัตถุดิบ</div>
             </a>
         </li>
 
-        <!-- Management -->
-        <?php
-        $menuItems = [
-            'users' => 'จัดการผู้ใช้',
-            'shops' => 'จัดการร้านค้า',
-            'products' => 'จัดการขนม',
-            'ingredients' => 'จัดการวัตถุดิบ',
-            'orders' => 'ดูรายการคำสั่งซื้อ', 
-            'stocks' => 'จัดการสต็อก',
-            'promotions' => 'จัดการโปรโมชัน',
-            'reviews' => 'จัดการรีวิว', 
-        ];
-        ?>
-
-        <li class="menu-item <?= in_array($page, array_keys($menuItems)) ? 'active open' : '' ?>">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Management">จัดการข้อมูล</div>
+        <li class="menu-item <?= ($page == '' || $page == 'myItem') ? 'active' : '' ?>">
+            <a href="?page=myItem"
+                class="menu-link <?= ($page == '' || $page == 'myItem') ? 'active' : '' ?>">
+                <i class="menu-icon tf-icons bx bx-box"></i>
+                <div>ข้อมูลวัตถุดิบ</div>
             </a>
-
-            <ul class="menu-sub">
-                <?php foreach ($menuItems as $key => $label): ?>
-                    <li class="menu-item <?= $page == $key ? 'active' : '' ?>">
-                        <a href="?page=<?= $key ?>" class="menu-link">
-                            <div data-i18n="<?= ucfirst($key) ?>"><?= $label ?></div>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
         </li>
-         
+
+        <li class="menu-item <?= ($page == '' || $page == 'pinItem') ? 'active' : '' ?>">
+            <a href="?page=pinItem"
+                class="menu-link <?= ($page == '' || $page == 'pinItem') ? 'active' : '' ?>">
+                <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                <div>รายการจองวัตถุดิบ</div>
+            </a>
+        </li>
+
+        <li class="menu-item <?= ($page == '' || $page == 'profile') ? 'active' : '' ?>">
+            <a href="?page=profile"
+                class="menu-link <?= ($page == '' || $page == 'profile') ? 'active' : '' ?>">
+                <i class="menu-icon tf-icons bx bx-user-circle"></i>
+                <div>โปรไฟล์</div>
+            </a>
+        </li>
+
+
+        <?php if ($_SESSION['user_role'] == 'admin') { ?>
+
+            <!-- Management -->
+            <?php
+            $menuItems = [
+                'users' => 'จัดการผู้ใช้',
+                'shops' => 'จัดการร้านค้า',
+                'products' => 'จัดการขนม',
+                'ingredients' => 'จัดการวัตถุดิบ',
+                'orders' => 'ดูรายการคำสั่งซื้อ',
+                'stocks' => 'จัดการสต็อก',
+                'promotions' => 'จัดการโปรโมชัน',
+                'reviews' => 'จัดการรีวิว',
+            ];
+            ?>
+
+            <li class="menu-item <?= in_array($page, array_keys($menuItems)) ? 'active open' : '' ?>">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-layout"></i>
+                    <div data-i18n="Management">จัดการข้อมูล</div>
+                </a>
+
+                <ul class="menu-sub">
+                    <?php foreach ($menuItems as $key => $label): ?>
+                        <li class="menu-item <?= $page == $key ? 'active' : '' ?>">
+                            <a href="?page=<?= $key ?>" class="menu-link">
+                                <div data-i18n="<?= ucfirst($key) ?>"><?= $label ?></div>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+        <?php } ?>
 
 </aside>
 <!-- / Menu -->

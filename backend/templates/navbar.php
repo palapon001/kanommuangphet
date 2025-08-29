@@ -7,17 +7,20 @@
     </div>
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-        <!-- Search -->
-        <div class="navbar-nav align-items-center">
-            <div class="nav-item d-flex align-items-center">
-                <i class="bx bx-search fs-4 lh-0"></i>
-                <form action="index.php" method="get">
-                    <input type="text" name="q" class="form-control border-0 shadow-none" placeholder="ค้นหา..."
-                        aria-label="Search..." />
-                </form>
+        <?php
+        if ($_SESSION['user_role'] == 'admin') { ?>
+            <!-- Search -->
+            <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                    <i class="bx bx-search fs-4 lh-0"></i>
+                    <form action="index.php" method="get">
+                        <input type="text" name="q" class="form-control border-0 shadow-none" placeholder="ค้นหา..."
+                            aria-label="Search..." />
+                    </form>
+                </div>
             </div>
-        </div>
-        <!-- /Search -->
+            <!-- /Search -->
+        <?php } ?>
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             <!-- User -->
@@ -51,7 +54,8 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <button class="dropdown-item" href="#" onclick="alertConfirm('คุณต้องการออกจากระบบหรือไม่?', '<?= $config['url'] ?>/backend/?page=logout')">
+                        <button class="dropdown-item" href="#"
+                            onclick="alertConfirm('คุณต้องการออกจากระบบหรือไม่?', '<?= $config['url'] ?>/backend/?page=logout')">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">ออกจากระบบ</span>
                         </button>
@@ -62,4 +66,3 @@
         </ul>
     </div>
 </nav>
-
