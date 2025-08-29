@@ -4,9 +4,10 @@
     <div class="card-body">
       <div class="card-title d-flex align-items-start justify-content-between">
         <div class="avatar flex-shrink-0">
-          <img src="<?= $data['url'] ?>" alt="<?= $data['url'] ?>" class="rounded" />  
+          <!-- <img src="<?= $data['url'] ?>" alt="<?= $data['url'] ?>" class="rounded" /> -->
+          <i class="<?= $data['icon'] ?>" style="font-size: 2em;"></i>
         </div>
-        <div class="dropdown">
+        <!-- <div class="dropdown">
           <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
             <i class="bx bx-dots-vertical-rounded"></i>
@@ -15,11 +16,11 @@
             <a class="dropdown-item" href="javascript:void(0);">View More</a>
             <a class="dropdown-item" href="javascript:void(0);">Delete</a>
           </div>
-        </div>
+        </div> -->
       </div>
-      <span class="fw-semibold d-block mb-1">"<?= $data['name'] ?></span>
+      <span class="fw-semibold d-block mb-1"><?= $data['name'] ?></span>
       <h3 class="card-title mb-2"><?= $data['total'] ?></h3>
-      <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> <?= $data['num'] ?></small>
+      <!-- <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> <?= $data['num'] ?></small> -->
     </div>
   </div>
 <?php } ?>
@@ -28,27 +29,56 @@
 $mockData = [
   [
     'url' => 'https://placehold.co/38x38',
-    'name' => 'สินค้าทั้งหมด',
-    'total' => '1,234',
-    'num' => '+12.5%'
+    'icon' => 'bx bx-book',  // ขนมและสูตร
+    'name' => 'รายการขนมและสูตร',
+    'total' => count($model['products']),
+    'num' => ''
   ],
   [
     'url' => 'https://placehold.co/38x38',
-    'name' => 'คำสั่งซื้อวันนี้',
-    'total' => '456',
-    'num' => '+3.1%'
+    'icon' => 'bx bx-basket',  // วัตถุดิบ
+    'name' => 'รายการวัตถุดิบ',
+    'total' => count($model['ingredients']),
+    'num' => ''
   ],
   [
     'url' => 'https://placehold.co/38x38',
-    'name' => 'ผู้ใช้งานใหม่',
-    'total' => '78',
-    'num' => '+8.9%'
+    'icon' => 'bx bx-user',  // ผู้ใช้งาน
+    'name' => 'ผู้ใช้งานทั้งหมด',
+    'total' => count($model['users']),
+    'num' => ''
   ],
   [
     'url' => 'https://placehold.co/38x38',
-    'name' => 'คำสั่งซื้อวันนี้',
-    'total' => '456',
-    'num' => '+3.1%'
+    'icon' => 'bx bx-store',  // ร้านค้า
+    'name' => 'ร้านค้า',
+    'total' => count($model['shops']),
+    'num' => ''
+  ],
+
+  [
+    'url' => 'https://placehold.co/38x38',
+    'name' => '',
+    'total' =>  count($model['users']),
+    'num' => ''
+  ],
+  [
+    'url' => 'https://placehold.co/38x38',
+    'name' => '',
+    'total' => count($model['shops']),
+    'num' => ''
+  ],
+  [
+    'url' => 'https://placehold.co/38x38',
+    'name' => '',
+    'total' =>  count($model['users']),
+    'num' => ''
+  ],
+  [
+    'url' => 'https://placehold.co/38x38',
+    'name' => '',
+    'total' => count($model['shops']),
+    'num' => ''
   ]
 ];
 

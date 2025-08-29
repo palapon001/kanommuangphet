@@ -1,19 +1,19 @@
 <?php
 $sql = "SELECT 
-            u.id AS user_id,
-            u.name AS user_name,
-            s.id AS shop_id,
-            s.name AS shop_name,
-            i.id AS ingredient_id,
-            i.name AS ingredient_name,
-            i.unit AS ingredient_unit,
-            i.price AS ingredient_price,
-            i.ingredients_image
-        FROM users u
-        INNER JOIN shops s ON s.owner_id = u.id
-        LEFT JOIN ingredients i ON i.shop_id = s.id
-        WHERE u.id = :userId
-        ORDER BY s.id, i.name";
+    i.id AS ingredient_id, 
+    i.name AS ingredient_name, 
+    i.unit AS ingredient_unit, 
+    i.price AS ingredient_price, 
+    i.ingredients_image, 
+    s.id AS shop_id, 
+    s.name AS shop_name, 
+    u.id AS user_id, 
+    u.name AS user_name 
+FROM ingredients i 
+INNER JOIN shops s ON i.shop_id = s.id 
+INNER JOIN users u ON s.owner_id = u.id 
+WHERE u.id = :userId
+ORDER BY u.id, s.id, i.name;";
 
 $data = dbSelectSQL($sql, ['userId' => $_SESSION['user_id']]);
 

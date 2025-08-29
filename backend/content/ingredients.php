@@ -12,8 +12,8 @@ $cols = [
     'name' => 'ชื่อสินค้า',
     'unit' => 'หน่วย',
     'description' => 'รายละเอียด',
+    'ingredients_image' => 'ดูภาพ',
     'price' => 'ราคา',
-    'products_image' => 'รูปสินค้า',
     'created_at' => 'วันที่สร้าง'
 ];
 

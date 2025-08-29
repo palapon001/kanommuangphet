@@ -31,30 +31,69 @@
             </a>
         </li>
 
-        <li class="menu-item <?= ( $page == 'myItem') ? 'active' : '' ?>">
-            <a href="?page=myItem"
-                class="menu-link <?= ( $page == 'myItem') ? 'active' : '' ?>">
-                <i class="menu-icon tf-icons bx bx-box"></i>
-                <div>ข้อมูลวัตถุดิบ</div>
-            </a>
-        </li>
+        <?php if ($_SESSION['user_role'] == 'admin' ||  $_SESSION['user_role'] == 'dessert') { ?>
 
-        <li class="menu-item <?= ( $page == 'pinItem') ? 'active' : '' ?>">
-            <a href="?page=pinItem"
-                class="menu-link <?= ( $page == 'pinItem') ? 'active' : '' ?>">
-                <i class="menu-icon tf-icons bx bx-calendar-check"></i>
-                <div>รายการจองวัตถุดิบ</div>
-            </a>
-        </li>
+            <li class="menu-item <?= ($page == 'myRecipe') ? 'active' : '' ?>">
+                <a href="?page=myRecipe"
+                    class="menu-link <?= ($page == 'myRecipe') ? 'active' : '' ?>">
+                    <i class="menu-icon tf-icons bx bx-book"></i>
+                    <div>ขนมและสูตร</div>
+                </a>
+            </li>
 
-        <li class="menu-item <?= ( $page == 'profile') ? 'active' : '' ?>">
+            <li class="menu-item <?= ($page == 'productionList') ? 'active' : '' ?>">
+                <a href="?page=productionList"
+                    class="menu-link <?= ($page == 'productionList') ? 'active' : '' ?>">
+                    <i class="menu-icon tf-icons bx bx-cog"></i>
+                    <div>รายการผลิต</div>
+                </a>
+            </li>
+
+            <li class="menu-item <?= ($page == 'dessertBooking') ? 'active' : '' ?>">
+                <a href="?page=dessertBooking"
+                    class="menu-link <?= ($page == 'dessertBooking') ? 'active' : '' ?>">
+                    <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                    <div>รายการจองขนม</div>
+                </a>
+            </li>
+
+            <li class="menu-item <?= ($page == 'shopManagement') ? 'active' : '' ?>">
+                <a href="?page=shopManagement"
+                    class="menu-link <?= ($page == 'shopManagement') ? 'active' : '' ?>">
+                    <i class="menu-icon tf-icons bx bx-store"></i>
+                    <div>การจัดการหน้าร้าน</div>
+                </a>
+            </li>
+        <?php } ?>
+
+
+
+        <?php if ($_SESSION['user_role'] == 'admin' ||  $_SESSION['user_role'] == 'ingredient') { ?>
+            <li class="menu-item <?= ($page == 'myItem') ? 'active' : '' ?>">
+                <a href="?page=myItem"
+                    class="menu-link <?= ($page == 'myItem') ? 'active' : '' ?>">
+                    <i class="menu-icon tf-icons bx bx-box"></i>
+                    <div>ข้อมูลวัตถุดิบ</div>
+                </a>
+            </li>
+
+            <li class="menu-item <?= ($page == 'pinItem') ? 'active' : '' ?>">
+                <a href="?page=pinItem"
+                    class="menu-link <?= ($page == 'pinItem') ? 'active' : '' ?>">
+                    <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                    <div>รายการจองวัตถุดิบ</div>
+                </a>
+            </li>
+
+        <?php } ?>
+
+        <li class="menu-item <?= ($page == 'profile') ? 'active' : '' ?>">
             <a href="?page=profile"
-                class="menu-link <?= ( $page == 'profile') ? 'active' : '' ?>">
+                class="menu-link <?= ($page == 'profile') ? 'active' : '' ?>">
                 <i class="menu-icon tf-icons bx bx-user-circle"></i>
                 <div>โปรไฟล์</div>
             </a>
         </li>
-
 
         <?php if ($_SESSION['user_role'] == 'admin') { ?>
 
