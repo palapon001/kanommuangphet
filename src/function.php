@@ -273,20 +273,47 @@ function renderTable($data, $cols = null, $url = '')
                                             case 'avatar_url':
                                                 $uploadDir = '../uploads/' . $row['role'] . '/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
-                                                break;
+                                                ?> 
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
+                                                        readonly>
+                                                </div>
+                                                <?php break;
 
                                             case 'profile_image':
                                                 $uploadDir = '../uploads/shops/' . $row['id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                 ?> 
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
+                                                        readonly>
+                                                </div>
+                                                <?php
                                                 break;
                                             case 'products_image':
                                                 $uploadDir = '../uploads/products/' . $row['id'] . '_' . $row['shop_id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                ?> 
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
+                                                        readonly>
+                                                </div>
+                                                <?php
                                                 break;
 
                                             case 'ingredients_image':
                                                 $uploadDir = '../uploads/ingredients/' . $row['id'] . '_' . $row['shop_id'] . '_' . $row['name'] . '/';
                                                 $imgData = ['id' => $row['id'], 'name' => $key, 'currentImage' => $row[$key] ?? '', 'uploadPath' => $uploadDir];
+                                                 ?> 
+                                                <div class="mb-3">
+                                                    <label class="form-label"><?= ($key) ?></label>
+                                                    <input type="text" name="<?= $key ?>" value="<?= ($row[$key]) ?>" class="form-control"
+                                                        readonly>
+                                                </div>
+                                                <?php
                                                 break;
 
                                             default: ?>
@@ -305,7 +332,7 @@ function renderTable($data, $cols = null, $url = '')
                                 <div class="dropdown-divider"></div>
                                 <?php
                                 renderImageUpload(
-                                    $path,
+                                    $path.'?act=upload',
                                     $imgData['id'],
                                     $imgData['name'],
                                     $imgData['currentImage'],
@@ -335,7 +362,6 @@ function renderTable($data, $cols = null, $url = '')
                                 case 'id':  
                                 case 'created_at': ?>
                                     <?php break; ?> <!-- ไม่ต้องแสดง ID -->
-
                                 <?php
                                 case 'role': ?>
                                     <div class="mb-3">
@@ -521,34 +547,42 @@ function uploadMultipleImages($inputName, $targetDir = 'uploads/', $baseFilename
     }
 
     return $uploadedPaths;
-}
+} 
+
 function renderImageUpload($url, $id, $name, $currentImage = '', $uploadPath = '')
 {
+    $inputId = 'upload_' . $id; // ให้ unique id
 ?>
-    <div class="mb-3">
-        <label class="form-label"><?= htmlspecialchars($name) ?></label>
-        <form class="imgForm" action="<?= $url ?>?act=upload" method="post" enctype="multipart/form-data">
-            <!-- hidden field เก็บข้อมูล -->
-            <input type="hidden" name="id" value="<?= (int) $id ?>">
-            <input type="hidden" name="field_name" value="<?= htmlspecialchars($name) ?>">
-            <input type="hidden" name="upload_path" value="<?= htmlspecialchars($uploadPath) ?>">
 
-            <!-- input file -->
-            <input type="file" name="upload" class="form-control" accept="image/*">
+    <!-- Label สำหรับคลิกเพื่อเลือกไฟล์ -->
+    <label for="<?= $inputId ?>" class="btn btn-primary me-2 mb-2">
+        <span class="d-none d-sm-block">อัพโหลดรูปภาพใหม่</span>
+    </label>
 
-            <input type="submit" name="save" value="Upload" class="btn btn-primary mt-2">
-        </form>
+    <!-- Form ต้องอยู่นอก label -->
+    <form class="imgForm" action="<?= $url ?>" method="post" enctype="multipart/form-data">
+        <!-- hidden fields -->
+        <input type="hidden" name="id" value="<?= (int)$id ?>">
+        <input type="hidden" name="field_name" value="<?= htmlspecialchars($name) ?>">
+        <input type="hidden" name="upload_path" value="<?= htmlspecialchars($uploadPath) ?>">
 
-        <!-- Preview ถ้ามีรูป -->
-        <?php if (!empty($currentImage) && file_exists($uploadPath . '/' . $currentImage)): ?>
-            <div class="mt-2">
-                <img src="<?= htmlspecialchars($uploadPath . '/' . $currentImage) ?>" alt="Preview"
-                    style="max-height: 100px; border:1px solid #ccc; padding:3px;">
-            </div>
-        <?php endif; ?>
-    </div>
+        <!-- input file ซ่อน แต่เชื่อมกับ label ด้วย id -->
+        <input type="file" name="upload" id="<?= $inputId ?>" class="form-control" accept="image/*" style="display:none" onchange="this.form.submit()">
+
+        <!-- สามารถมีปุ่ม submit เพิ่มถ้าไม่อยาก auto submit -->
+        <!-- <input type="submit" name="save" value="Upload" class="btn btn-primary mt-2"> -->
+    </form>
+
+    <!-- Preview ถ้ามีรูป -->
+    <?php if (!empty($currentImage) && file_exists($uploadPath . '/' . $currentImage)): ?>
+        <div class="mt-2">
+            <img src="<?= htmlspecialchars($uploadPath . '/' . $currentImage) ?>" alt="Preview"
+                style="max-height: 100px; border:1px solid #ccc; padding:3px;">
+        </div>
+    <?php endif; ?>
 <?php
-}
+} 
+
 
 function uploadFileAndUpdate($table, $id, $field_name, $data, $uploadBasePath = '../uploads/')
 {

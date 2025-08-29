@@ -11,23 +11,27 @@ $config = [
 renderHead($config, 'auth');
 include 'src/model.php';
 
-$shops = ltrim($_GET['shops'], '0');
-if (!isset($shops)) {
-    // ดึงข้อมูลจากฐานข้อมูล
+$shops = isset($_GET['shops']) ? ltrim($_GET['shops'], '0') : '';
+
+if (!empty($shops)) {
+    // ดึงข้อมูลของร้านที่เลือก
     $model = [
         'shops' => dbSelect(
             'shops',
-            'id LIKE :q1',
-            [':q1' => "%$shops%"],
+            'id = :q1',
+            [':q1' => $shops],
         ),
-        // 'products' => dbSelect('products'),
-        // 'ingredients' => dbSelect('ingredients'),
     ];
 
-    $modelIndex[$lang]['navbar_brand_text'] = $model['shops'][0]['name'];
+    // ตั้งชื่อร้านใน navbar
+    if (!empty($model['shops'])) {
+        $modelIndex[$lang]['navbar_brand_text'] = $model['shops'][0]['name'];
+    } else {
+        $modelIndex[$lang]['navbar_brand_text'] = "ไม่พบร้านค้า";
+    }
 
 } else {
-    // ดึงข้อมูลจากฐานข้อมูล
+    // ไม่มี parameter shops → ดึงข้อมูลทั้งหมด
     $model = [
         'shops' => dbSelect('shops'),
         'products' => dbSelect('products'),
@@ -186,102 +190,100 @@ $productChunksSale = chunkArray($productsSale, 5);
 
 <!-- ✅ Navbar Mobile (Collapsed Hamburger) -->
 <nav id="navMobile" class="navbar navbar-expand-lg navbar-light bg-light border-bottom sticky-top shadow-sm">
-  <div class="container">
-    <!-- Brand -->
-    <a class="navbar-brand fw-bold fs-4" href="#">
-      <?= $modelIndex[$lang]['navbar_brand_text'] ?>
-    </a>
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold fs-4" href="#">
+            <?= $modelIndex[$lang]['navbar_brand_text'] ?>
+        </a>
 
-    <!-- Hamburger button -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu"
-      aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <!-- Hamburger button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu"
+            aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!-- Collapsed content -->
-    <div class="collapse navbar-collapse" id="mobileMenu">
-      <div class="d-flex flex-column gap-3 mt-3">
+        <!-- Collapsed content -->
+        <div class="collapse navbar-collapse" id="mobileMenu">
+            <div class="d-flex flex-column gap-3 mt-3">
 
-        <!-- 🔍 Search -->
-        <form class="d-flex" role="search">
-          <input class="form-control me-2"
-                 type="search"
-                 placeholder="<?= $modelIndex[$lang]['search_placeholder_text'] ?>"
-                 aria-label="Search">
-          <button class="btn btn-outline-primary" type="submit">
-            <?= $modelIndex[$lang]['search_text'] ?>
-          </button>
-        </form>
+                <!-- 🔍 Search -->
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search"
+                        placeholder="<?= $modelIndex[$lang]['search_placeholder_text'] ?>" aria-label="Search">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <?= $modelIndex[$lang]['search_text'] ?>
+                    </button>
+                </form>
 
-        <!-- 👤 Login + 🌐 Language -->
-        <div class="d-flex align-items-center">
-          <?php if (isset($_SESSION['user_name'])) { ?>
-            <a href="#" id="loginButton"
-               class="btn btn-outline-primary me-3"><?= htmlspecialchars($_SESSION['user_name']); ?></a>
-            <button type="button" id="logoutButton"
-               class="btn btn-outline-danger me-3"><?= $modelIndex[$lang]['logout_button'] ?? 'Logout' ?></button>
-            <script>
-              document.getElementById('logoutButton').addEventListener('click', function (e) {
-                e.preventDefault();
-                Swal.fire({
-                  title: 'ออกจากระบบ?',
-                  text: "คุณต้องการออกจากระบบหรือไม่",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'ตกลง',
-                  cancelButtonText: 'ยกเลิก'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    window.location.href = 'logout.php';
-                  }
-                });
-              });
-            </script>
-          <?php } else { ?>
-            <a href="login.php" id="loginButton"
-               class="btn btn-outline-secondary me-3"><?= $modelIndex[$lang]['login_button'] ?></a>
-          <?php } ?>
+                <!-- 👤 Login + 🌐 Language -->
+                <div class="d-flex align-items-center">
+                    <?php if (isset($_SESSION['user_name'])) { ?>
+                        <a href="#" id="loginButton"
+                            class="btn btn-outline-primary me-3"><?= htmlspecialchars($_SESSION['user_name']); ?></a>
+                        <button type="button" id="logoutButton"
+                            class="btn btn-outline-danger me-3"><?= $modelIndex[$lang]['logout_button'] ?? 'Logout' ?></button>
+                        <script>
+                            document.getElementById('logoutButton').addEventListener('click', function (e) {
+                                e.preventDefault();
+                                Swal.fire({
+                                    title: 'ออกจากระบบ?',
+                                    text: "คุณต้องการออกจากระบบหรือไม่",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'ตกลง',
+                                    cancelButtonText: 'ยกเลิก'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = 'logout.php';
+                                    }
+                                });
+                            });
+                        </script>
+                    <?php } else { ?>
+                        <a href="login.php" id="loginButton"
+                            class="btn btn-outline-secondary me-3"><?= $modelIndex[$lang]['login_button'] ?></a>
+                    <?php } ?>
 
-          <div class="btn-group">
-            <button class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-              <?= strtoupper($lang) ?>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="?lang=th">TH</a></li>
-              <li><a class="dropdown-item" href="?lang=en">EN</a></li>
-            </ul>
-          </div>
-        </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <?= strtoupper($lang) ?>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="?lang=th">TH</a></li>
+                            <li><a class="dropdown-item" href="?lang=en">EN</a></li>
+                        </ul>
+                    </div>
+                </div>
 
-        <!-- 📂 Menu -->
-        <ul class="navbar-nav flex-column">
-          <?php foreach ($menuBottom[$lang] as $item => $submenus): ?>
-            <?php if (!empty($submenus)): ?>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="mob<?= md5($item) ?>" role="button"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                  <?= $item ?>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="mob<?= md5($item) ?>">
-                  <?php foreach ($submenus as $submenu): ?>
-                    <li><a class="dropdown-item" href="#"><?= $submenu ?></a></li>
-                  <?php endforeach; ?>
+                <!-- 📂 Menu -->
+                <ul class="navbar-nav flex-column">
+                    <?php foreach ($menuBottom[$lang] as $item => $submenus): ?>
+                        <?php if (!empty($submenus)): ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="mob<?= md5($item) ?>" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <?= $item ?>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="mob<?= md5($item) ?>">
+                                    <?php foreach ($submenus as $submenu): ?>
+                                        <li><a class="dropdown-item" href="#"><?= $submenu ?></a></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><?= $item ?></a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </ul>
-              </li>
-            <?php else: ?>
-              <li class="nav-item">
-                <a class="nav-link" href="#"><?= $item ?></a>
-              </li>
-            <?php endif; ?>
-          <?php endforeach; ?>
-        </ul>
 
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </nav>
 
 <!-- SlideShow -->

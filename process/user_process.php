@@ -9,11 +9,14 @@ echo 'act = ' . $act . '<br>';
 print_r($_POST);
 echo '</pre>';
 
+$to = $_POST['to'] ?? $_GET['to'] ?? 'users';
 
 $act = $_POST['act'] ?? $_GET['act'] ?? '';
 if (!in_array($act, ['insert', 'update', 'delete', 'upload'])) {
-    redirectWithAlert('error', 'การกระทำไม่ถูกต้อง', 'users');
+    redirectWithAlert('error', 'การกระทำไม่ถูกต้อง', $to);
 }
+
+
 
 $data = [
     'name' => trim($_POST['name'] ?? ''),
@@ -39,9 +42,9 @@ switch ($act) {
 
         if ($insertId) {
             uploadFileAndUpdate('users', $insertId, 'avatar_url', $data);    
-            redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', 'users');
+            redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', $to);
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล', 'users');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล', $to);
         }
         break;
 
@@ -49,15 +52,15 @@ switch ($act) {
         $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
-            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'users');
+            redirectWithAlert('error', 'ID ไม่ถูกต้อง', $to);
         }
 
         if ($data['name'] === '') {
-            redirectWithAlert('warning', 'กรุณากรอกชื่อ', 'users');
+            redirectWithAlert('warning', 'กรุณากรอกชื่อ', $to);
         }
 
         if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', 'users');
+            redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', $to);
         }
 
         if ($data['password'] !== '') {
@@ -68,21 +71,21 @@ switch ($act) {
 
         if (dbUpdate('users', $data, 'id = :id', ['id' => $id])) {
             echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true);
-            redirectWithAlert('success', 'แก้ไขข้อมูลสำเร็จ', 'users');
+            redirectWithAlert('success', 'แก้ไขข้อมูลสำเร็จ', $to);
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', 'users');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', $to);
         }
         break;
 
     case 'delete':
         $id = (int) ($_GET['id'] ?? 0);
         if ($id <= 0) {
-            redirectWithAlert('error', 'ID ไม่ถูกต้อง', 'users');
+            redirectWithAlert('error', 'ID ไม่ถูกต้อง', $to);
         }
         if (dbDelete('users', 'id = :id', ['id' => $id])) {
-            redirectWithAlert('success', 'ลบข้อมูลสำเร็จ', 'users');
+            redirectWithAlert('success', 'ลบข้อมูลสำเร็จ', $to);
         } else {
-            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบข้อมูล', 'users');
+            redirectWithAlert('error', 'เกิดข้อผิดพลาดในการลบข้อมูล', $to);
         }
         break;
     case 'upload':
@@ -124,9 +127,9 @@ switch ($act) {
                     echo json_encode(['status' => 'success', 'file' => $newFileName, 'path' => $fullPath]);
                     if (dbUpdate('users', ['avatar_url' => $fullPath], 'id = :id', ['id' => $id])) {
                         echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true);
-                        redirectWithAlert('success', 'อัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
+                        redirectWithAlert('success', 'อัพเดทรูปภาพข้อมูลสำเร็จ', $to);
                     } else {
-                        redirectWithAlert('error', 'เกิดข้อผิดพลาดอัพเดทรูปภาพข้อมูลสำเร็จ', 'users');
+                        redirectWithAlert('error', 'เกิดข้อผิดพลาดอัพเดทรูปภาพข้อมูลสำเร็จ', $to);
                     }
                 } else {
                     echo json_encode(['status' => 'error', 'message' => 'ไม่สามารถบันทึกไฟล์ได้', 'path' => $fullPath]);

@@ -61,7 +61,7 @@ $profile = [
                     <li>
                         <a class="dropdown-item" href="?page=profile">
                             <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">โปรไฟล์</span>
+                            <span class="align-middle">จัดการโปรไฟล์</span>
                         </a>
                     </li>
                     <li>

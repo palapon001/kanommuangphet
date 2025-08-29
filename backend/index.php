@@ -3,8 +3,8 @@ session_start();
 $baseDir = '../../';
 $parentDir = '../';
 
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') { 
-  header("Location: ../login.php"); 
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+  header("Location: ../login.php");
   exit;
 }
 
@@ -23,9 +23,9 @@ $currentPage = $page ?: ($_SESSION['page'] ?? 'users');
 $pageFile = "content/{$page}.php";
 $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
-$config['role'] = 'backend'; 
+$config['role'] = 'backend';
 
-renderHead($config); 
+renderHead($config);
 ?>
 
 <!-- Layout wrapper -->
@@ -47,7 +47,8 @@ renderHead($config);
           'shops' => dbSelect('shops'),
           'products' => dbSelect('products'),
           'ingredients' => dbSelect('ingredients'),
-          'banks' => $banks ?? []
+          'banks' => $banks ?? [],
+          'profile' => dbSelect('users','id = :id',[':id' => $_SESSION['user_id']])
         ];
 
         if (!empty($search)) {
@@ -66,7 +67,7 @@ renderHead($config);
         <!-- / Content -->
         <!-- Footer -->
         <?php include 'templates/footer.php'; ?>
-        <!-- / Footer -->
+                <!-- / Footer -->
         <div class="content-backdrop fade"></div>
       </div>
       <!-- / Content wrapper -->
