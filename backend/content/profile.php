@@ -2,11 +2,10 @@
 // สร้าง array ของฟิลด์ที่ต้องการแสดงใน form
 $fields = [
     ['label' => 'ID', 'name' => 'id', 'type' => 'hidden'],
-    ['label' => 'Avatar', 'name' => 'avatar_url', 'type' => 'hidden'],
     ['label' => 'Full Name', 'name' => 'name', 'type' => 'text'],
     ['label' => 'Email', 'name' => 'email', 'type' => 'email'],
     ['label' => 'Phone', 'name' => 'phone', 'type' => 'text'],
-    ['label' => 'Password', 'name' => 'password', 'type' => 'password'],
+    ['label' => 'Password', 'name' => 'password', 'type' => 'text'],
 ];
 ?>
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -26,7 +25,7 @@ $fields = [
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
                         <img src="<?= htmlspecialchars($config['url'] . '/' . $profile['avatar_url']) ?>"
                             alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar"
-                            onerror="this.onerror=null;this.src='<?= $config['url'] ?>/assets/img/avatars/1.png';" />
+                            onerror="this.onerror=null; this.src='https://placehold.co/40?text=Profile';" />
                         <div class="button-wrapper">
                             <?php
                             $uploadDir = '../uploads/' . $profile['role'] . '/' . $profile['id'] . '_' . $profile['name'] . '/';
@@ -70,7 +69,7 @@ $fields = [
                                     <label for="<?= $field['name'] ?>" class="form-label"><?= $field['label'] ?></label>
                                     <input type="<?= $field['type'] ?>" class="form-control" id="<?= $field['name'] ?>"
                                         name="<?= $field['name'] ?>"
-                                        value="<?= htmlspecialchars($profile[$field['name']]) ?>" />
+                                        value="<?= htmlspecialchars($profile[$field['name']]) ?>" <?= $field['name'] == 'password' ? 'readonly' : ''?>/>
                                 </div>
                             <?php endforeach; ?>
                         </div>

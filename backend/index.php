@@ -3,7 +3,8 @@ session_start();
 $baseDir = '../../';
 $parentDir = '../';
 
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+if (!isset($_SESSION['user_role']) || $_GET['page'] == 'logout') {
+  session_destroy();
   header("Location: ../login.php");
   exit;
 }
@@ -25,6 +26,17 @@ $config['title'] = 'Kanom Muang Phet (Backend)';
 $config['description'] = 'ระบบเปรียบเทียบราคาวัตถุดิบและร้านขนม (Backend)';
 $config['role'] = 'backend';
 
+$model = [
+  'users' => dbSelect('users'),
+  'shops' => dbSelect('shops'),
+  'products' => dbSelect('products'),
+  'ingredients' => dbSelect('ingredients'),
+  'banks' => $banks ?? [],
+  'profile' => dbSelect('users', 'id = :id', [':id' => $_SESSION['user_id']])
+];
+
+$profile = $model['profile'][0];
+
 renderHead($config);
 ?>
 
@@ -42,23 +54,9 @@ renderHead($config);
         <!-- Content -->
         <?php
 
-        $model = [
-          'users' => dbSelect('users'),
-          'shops' => dbSelect('shops'),
-          'products' => dbSelect('products'),
-          'ingredients' => dbSelect('ingredients'),
-          'banks' => $banks ?? [],
-          'profile' => dbSelect('users','id = :id',[':id' => $_SESSION['user_id']])
-        ];
-
         if (!empty($search)) {
           include 'content/search.php'; // ถ้ามีคำค้นหา ให้แสดงหน้า search
         } else {
-          if ($page == 'logout') {
-            session_destroy();
-            header("Location: ./login.php"); // ออกจากระบบ
-            exit;
-          }
           ($page && file_exists($pageFile))
             ? include $pageFile               // ถ้ามีหน้าและไฟล์มีจริง ให้ include
             : include 'content/dashboard.php'; // ไม่เช่นนั้นให้กลับไปหน้า dashboard
@@ -67,7 +65,7 @@ renderHead($config);
         <!-- / Content -->
         <!-- Footer -->
         <?php include 'templates/footer.php'; ?>
-                <!-- / Footer -->
+        <!-- / Footer -->
         <div class="content-backdrop fade"></div>
       </div>
       <!-- / Content wrapper -->

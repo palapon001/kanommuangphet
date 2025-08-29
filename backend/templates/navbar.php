@@ -51,16 +51,7 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="?page=profile">
-                            <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">จัดการโปรไฟล์</span>
-                        </a>
-                    </li>
-                    <li>
-                        <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                        <button class="dropdown-item" href="#" onclick="alertConfirm('คุณต้องการออกจากระบบหรือไม่?', '?page=logout')">
+                        <button class="dropdown-item" href="#" onclick="alertConfirm('คุณต้องการออกจากระบบหรือไม่?', '<?= $config['url'] ?>/backend/?page=logout')">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">ออกจากระบบ</span>
                         </button>

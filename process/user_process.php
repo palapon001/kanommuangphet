@@ -41,7 +41,7 @@ switch ($act) {
         $insertId = dbInsert('users', $data);
 
         if ($insertId) {
-            uploadFileAndUpdate('users', $insertId, 'avatar_url', $data);    
+            uploadFileAndUpdate('users', $insertId, 'avatar_url', $data);
             redirectWithAlert('success', 'เพิ่มข้อมูลสำเร็จ', $to);
         } else {
             redirectWithAlert('error', 'เกิดข้อผิดพลาดในการเพิ่มข้อมูล', $to);
@@ -55,26 +55,39 @@ switch ($act) {
             redirectWithAlert('error', 'ID ไม่ถูกต้อง', $to);
         }
 
-        if ($data['name'] === '') {
+        // สร้าง $data จาก $_POST เฉพาะ field ที่ส่งมา
+        $allowedFields = ['name', 'email', 'phone', 'password', 'login_type', 'line_user_id', 'avatar_url', 'role'];
+        $data = [];
+
+        foreach ($allowedFields as $field) {
+            if (isset($_POST[$field])) {
+                $data[$field] = trim($_POST[$field]);
+            }
+        }
+
+        // Validation
+        if (isset($data['name']) && $data['name'] === '') {
             redirectWithAlert('warning', 'กรุณากรอกชื่อ', $to);
         }
 
-        if ($data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        if (isset($data['email']) && $data['email'] !== '' && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             redirectWithAlert('warning', 'อีเมลไม่ถูกต้อง', $to);
         }
 
-        if ($data['password'] !== '') {
+        if (isset($data['password']) && $data['password'] !== '') {
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        } else {
+        } elseif (isset($data['password'])) {
+            // ลบ password ถ้าเป็นค่าว่าง เพื่อไม่ให้ update เป็นค่าว่าง
             unset($data['password']);
         }
 
-        if (dbUpdate('users', $data, 'id = :id', ['id' => $id])) {
-            echo 'update id = ' . $id . '<br>' . 'data = ' . print_r($data, true);
+        // อัปเดตเฉพาะ field ที่มีใน $data
+        if (!empty($data) && dbUpdate('users', $data, 'id = :id', ['id' => $id])) {
             redirectWithAlert('success', 'แก้ไขข้อมูลสำเร็จ', $to);
         } else {
             redirectWithAlert('error', 'เกิดข้อผิดพลาดในการแก้ไขข้อมูล', $to);
         }
+
         break;
 
     case 'delete':
