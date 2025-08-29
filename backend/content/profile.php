@@ -23,7 +23,7 @@ $fields = [
                 <!-- Account -->
                 <div class="card-body">
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
-                        <img src="<?= htmlspecialchars($config['url'] . '/' . $profile['avatar_url']) ?>"
+                        <img src="<?= htmlspecialchars(getAvatarUrl($profile['avatar_url'], $config['url'])) ?>"
                             alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar"
                             onerror="this.onerror=null; this.src='https://placehold.co/40?text=Profile';" />
                         <div class="button-wrapper">
@@ -69,7 +69,8 @@ $fields = [
                                     <label for="<?= $field['name'] ?>" class="form-label"><?= $field['label'] ?></label>
                                     <input type="<?= $field['type'] ?>" class="form-control" id="<?= $field['name'] ?>"
                                         name="<?= $field['name'] ?>"
-                                        value="<?= htmlspecialchars($profile[$field['name']]) ?>" <?= $field['name'] == 'password' ? 'readonly' : ''?>/>
+                                        value="<?= htmlspecialchars($profile[$field['name']]) ?>"
+                                        <?= $field['name'] == 'password' ? 'readonly' : '' ?> />
                                 </div>
                             <?php endforeach; ?>
                         </div>

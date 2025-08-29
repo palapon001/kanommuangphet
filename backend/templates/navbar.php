@@ -27,8 +27,8 @@
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="<?= $config['url'] . $profile['avatar_url'] ?>" alt="profile"
-                            class="w-px-40 h-auto rounded-circle"
+                        <img src="<?= htmlspecialchars(getAvatarUrl($profile['avatar_url'], $config['url'])) ?>"
+                            alt="avatar" class="w-px-40 h-auto rounded-circle"
                             onerror="this.onerror=null; this.src='https://placehold.co/40?text=Profile';" />
                     </div>
                 </a>
@@ -38,8 +38,8 @@
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
-                                        <img src="<?= $config['url'] . $profile['avatar_url'] ?>" alt="profile"
-                                            class="w-px-40 h-auto rounded-circle"
+                                        <img src="<?= htmlspecialchars(getAvatarUrl($profile['avatar_url'], $config['url'])) ?>"
+                                            alt="avatar" class="w-px-40 h-auto rounded-circle"
                                             onerror="this.onerror=null; this.src='https://placehold.co/40?text=Profile';" />
                                     </div>
                                 </div>

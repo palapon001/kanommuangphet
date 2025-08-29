@@ -612,3 +612,17 @@ function uploadFileAndUpdate($table, $id, $field_name, $data, $uploadBasePath = 
         }
     }
 }
+ 
+function getAvatarUrl($avatar_url, $base_url) {
+    if (empty($avatar_url)) {
+        return $base_url . '/uploads/default.png'; // default avatar
+    }
+
+    // ถ้าเป็น LINE URL
+    if (str_starts_with($avatar_url, 'https://profile.line-scdn.net/')) {
+        return $avatar_url;
+    }
+
+    // ถ้าเป็น local upload
+    return $base_url . '/' . ltrim($avatar_url, '/');
+}
